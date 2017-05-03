@@ -16,3 +16,7 @@
 .card-panel .nav-content {
 	margin: auto;
 }
+
+.nav-content {
+	align-items: center;
+}

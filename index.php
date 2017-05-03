@@ -12,7 +12,7 @@
 	<body>
 		<nav class="nav-extended">
 			<div class="nav-wrapper yellow darken-2">
-				<a href="#" class="brand-logo"><img src="src/resources/brand.png" alt="Tokokeren"></a>
+				<a href="./" class="brand-logo"><img src="src/resources/brand.png" alt="Tokokeren"></a>
 				<a href="#" data-activates="mobile-demo" class="button-collapse black-text"><i class="material-icons">menu</i></a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
 					<li><a href="#" class="black-text">SIGN IN</a></li>
