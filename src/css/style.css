@@ -1,3 +1,13 @@
+body {
+	display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+	flex: 1 0 auto;
+}
+
 .nav-wrapper img {
 	height: 50px;
 	width: 225px;
@@ -19,4 +29,32 @@
 
 .nav-content {
 	align-items: center;
+}
+
+img.product {
+	height: 150px;
+	max-width: 100%;
+}
+
+.block {
+	align-items: center;
+	text-align: center;
+}
+
+span.product-desc, p.valign-wrapper {
+	text-align: left;
+}
+
+span.price {
+	font-size: 16pt;
+	font-weight: 600;
+}
+
+span.soc-logo {
+	margin-right: 5px;
+	font-size: 16pt;
+}
+
+div.title-card {
+	text-align: center;
 }
