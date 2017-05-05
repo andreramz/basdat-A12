@@ -15,8 +15,26 @@
 	function login($email, $password) {
 		$realemail = "admin@admin.com";
 		$realpass = "123456";
+
+		$penjualemail = "penjual@penjual.com";
+		$penjualpass = "123456";
+
+		$pembeliemail = "pembeli@pembeli.com";
+		$pembelipass = "123456";
+
 		if ($email == $realemail && $password == $realpass) {
 			$_SESSION['logged'] = $email;
+			$_SESSION['role'] = 'admin';
+			header("Location: ../");
+		}
+		elseif ($email == $penjualemail && $password == $penjualpass) {
+			$_SESSION['logged'] = $email;
+			$_SESSION['role'] = 'penjual';
+			header("Location: ../");
+		}
+		elseif ($email == $pembeliemail && $password == $pembelipass) {
+			$_SESSION['logged'] = $email;
+			$_SESSION['role'] = 'pembeli';
 			header("Location: ../");
 		}
 		else {
