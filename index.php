@@ -26,12 +26,215 @@
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'pembeli') { ?>
 							    <li class="tab"><a class="black-text" href="#create-toko"><strong>Buat Toko</strong></a></li>
 							    <?php } ?>
+							    <?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
+								<li class="tab"><a class="black-text" href="#see-transaksi"><strong>Lihat Transaksi</strong></a></li>
+							    <?php } ?>
 					    	</ul>
 						</div>			
 					</div>
 					<div class="col m1 l2"></div>
 				</div>
 			</div>
+			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
+			<div id="see-transaksi" class="col s12">
+				<div class="container">
+					<div class="row">
+						<div class="col m2 s12 block"></div>
+						<div class="col m8 s12 block">
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="transaksi-pulsa-button">Produk Pulsa</button>
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="transaksi-shipped-button">Produk Barang</button>
+							<div id="transaksi-pulsa" class="card-panel yellow lighten-3 black-text">
+								<table class="striped">
+									<thead>
+										<tr>
+											<th>No Invoice</th>
+											<th>Nama Produk</th>
+											<th>Tanggal</th>
+											<th>Status</th>
+											<th>Total Bayar</th>
+											<th>Nominal</th>
+											<th>Nomor</th>
+											<th>Ulasan</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>P0000001</td>
+											<td>Pulsa IM3</td>
+											<td>4/1/2016</td>
+											<td>SUDAH DIBAYAR</td>
+											<td>12000</td>
+											<td>10</td>
+											<td>081317963432</td>
+											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-pulsa-1">ULAS</a></td>
+										</tr>
+										<tr>
+											<td>P0000002</td>
+											<td>Listrik PLN</td>
+											<td>4/1/2016</td>
+											<td>BELUM DIBAYAR</td>
+											<td>23000</td>
+											<td>20</td>
+											<td>081532532231</td>
+											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-pulsa-2">ULAS</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div id="modal-transaksi-pulsa-1" class="modal">
+								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-pulsa-1').modal('close'); return false;">
+							  	<div class="modal-content">
+									<div class="input-field">
+										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="P0000001" disabled required>
+										<label for="ulasan-kode-produk">Kode Produk</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
+										<label for="ulasan-rating">Rating</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
+										<label for="ulasan-komentar">Komentar</label>
+									</div>
+								</div>
+							    <div class="modal-footer">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+							    </div>
+								</form>
+							</div>
+							<div id="modal-transaksi-pulsa-2" class="modal">
+								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-pulsa-2').modal('close'); return false;">
+							  	<div class="modal-content">
+									<div class="input-field">
+										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="P0000002" disabled required>
+										<label for="ulasan-kode-produk">Kode Produk</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
+										<label for="ulasan-rating">Rating</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
+										<label for="ulasan-komentar">Komentar</label>
+									</div>
+								</div>
+							    <div class="modal-footer">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+							    </div>
+								</form>
+							</div>
+							<div id="transaksi-shipped" class="card-panel yellow lighten-3 black-text">
+								<table class="striped">
+									<thead>
+										<tr>
+											<th>No Invoice</th>
+											<th>Nama Toko</th>
+											<th>Tanggal</th>
+											<th>Status</th>
+											<th>Total Bayar</th>
+											<th>Alamat Kirim</th>
+											<th>Biaya Kirim</th>
+											<th>Nomor Resi</th>
+											<th>Jasa Kirim</th>
+											<th>Ulasan</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>S0000001</td>
+											<td>Fashion Keren</td>
+											<td>4/1/2016</td>
+											<td>BARANG SUDAH DIBAYAR</td>
+											<td>12000</td>
+											<td>Jl Veteran 45, Depok</td>
+											<td>25000</td>
+											<td>DPK9817421231</td>
+											<td>JNE OKE</td>
+											<td><a id="daftar-produk-1-button" class="waves-effect waves-light btn" href="#daftar-produk-1">DAFTAR PRODUK</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div id="daftar-produk-1" class="card-panel yellow lighten-3 black-text">
+								<table class="striped">
+									<thead>
+										<tr>
+											<th>Nama Produk</th>
+											<th>Berat</th>
+											<th>Kuantitas</th>
+											<th>Harga</th>
+											<th>Sub Total</th>
+											<th>Ulasan</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Celana bagus 1</td>
+											<td>4</td>
+											<td>4</td>
+											<td>20000</td>
+											<td>80000</td>
+											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-shipped-1">ULAS</a></td>
+										</tr>
+										<tr>
+											<td>Baju cantik 2</td>
+											<td>1</td>
+											<td>1</td>
+											<td>15000</td>
+											<td>15000</td>
+											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-shipped-2">ULAS</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div id="modal-transaksi-shipped-1" class="modal">
+								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-shipped-1').modal('close'); return false;">
+							  	<div class="modal-content">
+									<div class="input-field">
+										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000001" disabled required>
+										<label for="ulasan-kode-produk">Kode Produk</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
+										<label for="ulasan-rating">Rating</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
+										<label for="ulasan-komentar">Komentar</label>
+									</div>
+								</div>
+							    <div class="modal-footer">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+							    </div>
+								</form>
+							</div>
+							<div id="modal-transaksi-shipped-2" class="modal">
+								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-shipped-2').modal('close'); return false;">
+							  	<div class="modal-content">
+									<div class="input-field">
+										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000002" disabled required>
+										<label for="ulasan-kode-produk">Kode Produk</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
+										<label for="ulasan-rating">Rating</label>
+									</div>
+									<div class="input-field">
+										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
+										<label for="ulasan-komentar">Komentar</label>
+									</div>
+								</div>
+							    <div class="modal-footer">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+							    </div>
+								</form>
+							</div>
+						</div>
+						<div class="col m2 s12 block"></div>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
 			<div id="test1" class="col s12">
 				<div class="container">
 					<div class="row">
@@ -212,10 +415,32 @@
 			$(".button-collapse").sideNav();
 			$(".indicator").css("background-color: black;");
 			$("#category").hide();
+
+			$('#modal-transaksi-pulsa-1').modal();
+			$('#modal-transaksi-pulsa-2').modal();
+			$('#modal-transaksi-shipped-1').modal();
+			$('#modal-transaksi-shipped-2').modal();
+
+			$("#transaksi-pulsa").hide();
+			$("#transaksi-shipped").hide();
+			$("#daftar-produk-1").hide();
 			var forms = 1;
 			$("#category-button").click(function() {
 				$("#category").show();
 				$("#category-button").hide();
+			});
+			$("#transaksi-pulsa-button").click(function() {
+				$("#transaksi-pulsa").show();
+				$("#transaksi-pulsa-button").hide();
+				$("#transaksi-shipped-button").hide();
+			});
+			$("#transaksi-shipped-button").click(function() {
+				$("#transaksi-shipped").show();
+				$("#transaksi-pulsa-button").hide();
+				$("#transaksi-shipped-button").hide();
+			});
+			$("#daftar-produk-1-button").click(function() {
+				$("#daftar-produk-1").show();
 			});
 			$("#subcategory-button").click(function() {
 				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
