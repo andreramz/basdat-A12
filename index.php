@@ -26,6 +26,12 @@
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'pembeli') { ?>
 							    <li class="tab"><a class="black-text" href="#create-toko"><strong>Buat Toko</strong></a></li>
 							    <?php } ?>
+							    <?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'pembeli' || $_SESSION['role'] == 'penjual')) { ?>
+							    <li class="tab"><a class="black-text" href="#buy-product"><strong>Beli Produk</strong></a></li>
+							    <?php } ?>
+							    <?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'pembeli' || $_SESSION['role'] == 'penjual')) { ?>
+							    <li class="tab"><a class="black-text" href="#keranjang-belanja"><strong>Lihat Keranjang</strong></a></li>
+							    <?php } ?>
 					    	</ul>
 						</div>			
 					</div>
@@ -181,6 +187,208 @@
 					</div>
 				</div>
 			</div>
+			<div id="buy-product" class="col s12">
+				<div class="container">
+				<table class="striped">
+					<thead>
+						<tr>
+				            <th>Kode Produk</th>
+				            <th>Nama Produk</th>
+				            <th>Harga</th>
+				            <th>Deskripsi</th>
+				            <th>Nominal</th>
+				            <th>Beli</th>
+		          		</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>P0000001</td>
+							<td>Pulsa IM3</td>
+							<td>12000</td>
+							<td></td>
+							<td>10</td>
+							<td>
+								<a class="waves-effect waves-light btn" href="#modal1">Beli</a>
+							 	<div id="modal1" class="modal">
+							    <div class="modal-content">
+							      <h4>FORM MEMBELI PRODUK PULSA</h4>
+							      <div class="row">
+							      	<p>Kode Produk: P0000001</p>
+							      	<form class="col s12">
+							      		<div class="input-field col s6">
+						          			No Telepon: <input placeholder="Masukkan nomor" id="no_telepon" type="tel" class="validate">
+						          		</div>
+						          	</form>
+							      </div>
+							    </div>
+							    <div class="modal-footer">
+							    	<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+							    </div>
+			 					</div>
+							</td>
+						</tr>
+						<tr>
+							<td>P0000002</td>
+							<td>Pulsa XL</td>
+							<td>12000</td>
+							<td></td>
+							<td>10</td>
+							<td>
+								<a class="waves-effect waves-light btn" href="#modal2">Beli</a>
+							 	<div id="modal2" class="modal">
+							    <div class="modal-content">
+							      <h4>FORM MEMBELI PRODUK PULSA</h4>
+							      <div class="row">
+							      	<p>Kode Produk: P0000002</p>
+							      	<form class="col s12">
+							      		<div class="input-field col s6">
+						          			No Telepon: <input placeholder="Masukkan nomor" id="no_telepon" type="tel" class="validate">
+						          		</div>
+						          	</form>
+							      </div>
+							    </div>
+							    <div class="modal-footer">
+							    	<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+							    </div>
+			 					</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+				<div class="container">
+					<h4>FORM PILIH TOKO</h4>
+					<span>Nama Toko:
+					<!-- Dropdown Trigger -->
+					  <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Pilih Toko</a>
+
+					  <!-- Dropdown Structure -->
+					  <ul id='dropdown1' class='dropdown-content'>
+					    <li><a href="#modal3">Kelontong</a></li>
+					    <li><a href="#modal3">Indodesember</a></li>
+					  </ul>
+					</span>
+					<div id="modal3" class="modal">
+				    <div class="modal-content">
+				      <h4>DAFTAR SHIPPED PRODUK</h4>
+				      <span>
+				      	<a class="dropdown-button btn" href="#" data-activates="dropdown2">Kategori</a>
+				      	<ul id='dropdown2' class='dropdown-content'>
+						    <li><a href="#!">Celana</a></li>
+						    <li><a href="#!">Baju</a></li>
+						</ul>
+					   </span>
+					   <span>
+				      	<a class="dropdown-button btn" href="#" data-activates="dropdown2">Sub Kategori</a>
+				      	<ul id='dropdown2' class='dropdown-content'>
+						    <li><a href="#!">Nylon</a></li>
+						    <li><a href="#!">Jeans</a></li>
+						</ul>
+					    </span>
+					    <table class="striped">
+					        <thead>
+					          <tr>
+					              <th>Kode Produk</th>
+					              <th>Nama Produk</th>
+					              <th>Harga</th>
+					              <th>Deskripsi</th>
+					              <th>Is_asuransi</th>
+					              <th>Stok</th>
+					              <th>Is Baru</th>
+					              <th>Harga Grosir</th>
+					              <th>Beli</th>
+					          </tr>
+					        </thead>
+					        <tbody>
+					          <tr>
+					            <td>P0000001</td>
+					            <td>Tas Fower 1</td>
+					            <td>75000</td>
+					            <td>KOSONG</td>
+					            <td>TRUE</td>
+					            <td>30</td>
+					            <td>TRUE</td>
+					            <td>60000</td>
+					            <td>
+				    				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Beli</a>
+					            </td>
+					          </tr>
+					          <tr>
+					          	<td>P0000002</td>
+					            <td>Tas Fower 2</td>
+					            <td>75000</td>
+					            <td>KOSONG</td>
+					            <td>TRUE</td>
+					            <td>140</td>
+					            <td>TRUE</td>
+					            <td>70000</td>
+					            <td>
+				    				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Beli</a>
+					            </td>
+					          </tr>
+					        </tbody>
+					      </table>
+				    </div>
+ 					</div>
+				</div>
+			</div>
+			<div id="keranjang-belanja" class="col s12">
+				<div class="container">
+					<h4>DAFTAR SHIPPED PRODUK</h4>
+					<table class="striped">
+					        <thead>
+					          <tr>
+					              <th>Kode Produk</th>
+					              <th>Nama Produk</th>
+					              <th>Berat</th>
+					              <th>Kuantitas</th>
+					              <th>Harga</th>
+					              <th>Sub Total</th>
+					          </tr>
+					        </thead>
+					        <tbody>
+					          <tr>
+					            <td>P0000001</td>
+					            <td>Tas Fower 1</td>
+					            <td>4</td>
+					            <td>4</td>
+					            <td>75000</td>
+					            <td>300000</td>
+					          </tr>
+					          <tr>
+					          	<td>P0000002</td>
+					            <td>Tas Fower 2</td>
+					            <td>3</td>
+					            <td>4</td>
+					            <td>80000</td>
+					            <td>240000</td>
+					          </tr>
+					        </tbody>
+					</table>
+					<span>Alamat Kirim:   
+						<div class="row">
+						    <form class="col s6">
+						      <div class="row">
+						        <div class="input-field col s6">
+						          <input id="email" type="text" class="validate">
+						          <label for="email" data-error="wrong" data-success="right">Alamat</label>
+						        </div>
+						      </div>
+						    </form>
+						</div>
+					</span>
+					<span>Jasa Kirim:
+						<a class='dropdown-button btn' href='#' data-activates='dropdown5'>Pilih Jasa Kirim</a>
+
+					  <!-- Dropdown Structure -->
+					  <ul id='dropdown5' class='dropdown-content'>
+					    <li><a href="index.php">Bojek</a></li>
+					    <li><a href="index.php">Go-Blay</a></li>
+					  </ul>
+					</span>
+					<a class="waves-effect waves-light btn" href="index.php">CHECKOUT</a>
+				</div>
+			</div>
 			<?php } ?>
 			<div id="test3" class="col s12">
 				<div class="container">
@@ -209,6 +417,9 @@
 		<script src="src/js/jquery-3.1.1.min.js"></script>
 		<script src="materialize/js/materialize.js"></script>
 		<script>
+			$('#modal1').modal();
+			$('#modal2').modal();
+			$('#modal3').modal();
 			$(".button-collapse").sideNav();
 			$(".indicator").css("background-color: black;");
 			$("#category").hide();
