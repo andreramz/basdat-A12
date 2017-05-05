@@ -3,5 +3,3 @@
 <link rel="stylesheet" type="text/css" href="materialize/css/materialize.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="src/css/style.css">
-<script src="src/js/jquery-3.1.1.min.js"></script>
-<script src="materialize/js/materialize.js"></script>
