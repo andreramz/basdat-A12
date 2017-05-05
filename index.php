@@ -58,45 +58,52 @@
 			<div id="test2" class="col s12">
 				<div class="container">
 					<div class="row">
-						<div class="col m4 s12 block">
-							A
+						<div class="col m2 s12 block"></div>
+						<div class="col m8 s12 block">
+						<?php if (isset($_SESSION['logged'])) { ?>
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="category-button">Create Category</button>
+							<div id="category" class="card-panel yellow lighten-3 black-text">
+								<div class="input-field">
+									<input id="category-code" type="text" name="category-code" class="validate">
+									<label for="category-code">Kode Kategori</label>
+								</div>
+								<div class="input-field">
+									<input id="category-name" type="text" name="category-name" class="validate">
+									<label for="category-name">Nama Kategori</label>
+								</div>
+								<div id="category-forms"></div>
+								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="subcategory-button" style="margin-top: 10px;">Create Sub-category</button>
+								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+							</div>
+						<?php }
+						else {
+						?>
+							<div class="black-text">No category provided.</div>
+						<?php } ?>
 						</div>
-						<div class="col m4 s12 block">
-							B
-						</div>
-						<div class="col m4 s12 block">
-							C
-						</div>
+						<div class="col m2 s12 block"></div>
 					</div>
 				</div>
 			</div>
 			<div id="test3" class="col s12">
 				<div class="container">
 					<div class="row">
-						<div class="col m4 s12 block">
-							D
+						<div class="col m2 s12 block"></div>
+						<div class="col m8 s12 block">
+							<p class="black-text">Coming soon :)</p>
 						</div>
-						<div class="col m4 s12 block">
-							E
-						</div>
-						<div class="col m4 s12 block">
-							F
-						</div>
+						<div class="col m2 s12 block"></div>
 					</div>
 				</div>
 			</div>
 			<div id="test4" class="col s12">
 				<div class="container">
 					<div class="row">
-						<div class="col m4 s12 block">
-							G
+						<div class="col m2 s12 block"></div>
+						<div class="col m8 s12 block">
+							<p class="black-text">Coming soon :)</p>
 						</div>
-						<div class="col m4 s12 block">
-							H
-						</div>
-						<div class="col m4 s12 block">
-							I
-						</div>
+						<div class="col m2 s12 block"></div>
 					</div>
 				</div>
 			</div>
@@ -105,6 +112,16 @@
 		<script>
 			$(".button-collapse").sideNav();
 			$(".indicator").css("background-color: black;");
+			$("#category").hide();
+			var forms = 1;
+			$("#category-button").click(function() {
+				$("#category").show();
+				$("#category-button").hide();
+			});
+			$("#subcategory-button").click(function() {
+				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
+				forms++;
+			});
 		</script>
 	</body>
 </html>

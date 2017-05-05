@@ -1,4 +1,9 @@
-<?php session_start();?>
+<?php session_start();
+
+	if (isset($_SESSION['logged'])) {
+		header("Location: ./");
+	}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -16,7 +21,13 @@
 						<h4>Log In</h4>
 						<p>Sign in to join up and enjoy more features in Tokokeren.</p>
 						<div class="card-panel yellow lighten-3">
-							<form>
+							<span class="red-text text-darken-3"><?php
+								if (isset($_SESSION['status']) || $_SESSION['status'] == 'gagal') {
+									echo "Email atau password salah.";
+									unset($_SESSION['status']);
+								}
+							?></span>
+							<form action="./config/config.php" method="post">
 								<div class="input-field">
 									<input id="email" type="email" name="email" class="validate">
 									<label for="email">Email</label>
@@ -26,8 +37,8 @@
 									<label for="password">Password</label>
 								</div>
 								<input type="hidden" name="command" value="login">
+								<button class="waves-effect waves-light btn yellow darken-2 black-text">LOG IN</button>
 							</form>
-							<button class="waves-effect waves-light btn yellow darken-2 black-text">LOG IN</button>
 						</div>
 						<span>Don't have an account? <a class="yellow-text text-darken-3" style="font-weight: 450;" href="./register.php">Register Now for Free!</a></span>
 					</div>

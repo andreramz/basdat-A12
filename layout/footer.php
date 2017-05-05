@@ -8,9 +8,13 @@
       <div class="col l3 s12">
         <h5 class="black-text strength">Links</h5>
         <ul>
-          <li><a class="black-text text-lighten-3" href="#!">Home</a></li>
-          <li><a class="black-text text-lighten-3" href="#!">Sign In</a></li>
-          <li><a class="black-text text-lighten-3" href="#!">Register</a></li>
+          <li><a class="black-text text-lighten-3" href="./">Home</a></li>
+          <?php if (!isset($_SESSION['logged'])) { ?>
+            <li><a class="black-text text-lighten-3" href="./login.php">Sign In</a></li>
+            <li><a class="black-text text-lighten-3" href="./register.php">Register</a></li>
+          <?php } else { ?>
+            <li><a class="black-text text-lighten-3" href="./config.php?action=logout">Sign Out</a></li>
+          <?php } ?>
         </ul>
       </div>
       <div class="col l3 s12">
@@ -38,5 +42,3 @@
     </div>
   </div>
 </footer>
-<script src="src/js/jquery-3.1.1.min.js"></script>
-<script src="materialize/js/materialize.js"></script>
