@@ -9,10 +9,9 @@
 	<body>
 		<?php include("layout/navbar.php"); ?>
 		<main>
-			<div class="container">
+			<!--<div class="container"> -->
 				<div class="row">
-					<div class="col m1 l2"></div>
-					<div class="col s12 m10 l8">
+					<div class="col s12 m12 l12">
 						<div class="nav-content">
 						    <ul class="tabs tabs-transparent">
 							    <li class="tab"><a class="active black-text" href="#test1">Produk</a></li>
@@ -33,15 +32,14 @@
 								<?php } ?>
 
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'penjual') { ?>
-							    <li class="tab"><a class="black-text" href="#create-product-shipped"><strong>Buat Produk Pulsa</strong></a></li>
+							    <li class="tab"><a class="black-text" href="#create-product-shipped"><strong>Tambah Produk</strong></a></li>
 
 							    <?php } ?>
 					    	</ul>
 						</div>			
 					</div>
-					<div class="col m1 l2"></div>
 				</div>
-			</div>
+			<!-- </div> -->
 			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
 			<div id="see-transaksi" class="col s12">
 				<div class="container">

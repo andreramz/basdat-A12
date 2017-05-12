@@ -25,7 +25,7 @@
 					<li><a href="./register.php" class="waves-effect black-text"><span class="ion-android-people iconic"></span> Register</a></li>	
 				<?php } else { ?>
 					<li><span class="black-text" style="font-size: 15pt; margin-left: 35px; font-weight: 500;"><?php echo $_SESSION['logged']; ?></span></li>
-					<li><span class="black-text" style="margin-left: 35px;">Admin</span></li>
+					<li><span class="black-text" style="margin-left: 35px;"><?php echo $_SESSION['role'];?></span></li>
 					<li><a href="./config/config.php?action=logout" class="waves-effect black-text"><span class="ion-log-out iconic"></span> Sign Out</a></li>
 				<?php } ?>
 			</ul>
