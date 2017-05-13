@@ -289,6 +289,7 @@
 									<input id="category-code" type="text" name="category-code" class="validate">
 									<label for="category-code">Kode Kategori</label>
 								</div>
+								<span id="catcode-alert" class="red-text"></span>
 								<div class="input-field">
 									<input id="category-name" type="text" name="category-name" class="validate">
 									<label for="category-name">Nama Kategori</label>
@@ -597,7 +598,7 @@
 				$("#daftar-produk-1").show();
 			});
 			$("#subcategory-button").click(function() {
-				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
+				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate sub-category'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
 				forms++;
 			});
 			$('.datepicker').pickadate({
@@ -742,6 +743,18 @@
 				});
 
 				$('select').material_select();
+
+				$('#category-code').on("input propertychange", function() {
+					var catcode = $("#category-code").val();
+					$.post("config/config.php", {type: "category", typed: catcode}, function(response) {
+						if (response == "benar") {
+							$("#catcode-alert").html("");
+						}
+						else {
+							$("#catcode-alert").html("Kategori tidak unik atau sudah ada");
+						}
+					});
+				});
 			});
 
 		</script>
