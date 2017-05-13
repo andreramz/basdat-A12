@@ -33,13 +33,37 @@
 				header("Location: ../register.php");
 			}
 		}
+		else if ($_POST['command'] == 'addProdukPulsa'){
+			$kode_produk = $_POST['kode-product-pulsa']; 
+			$nama_produk = $_POST['nama-product-pulsa']; 
+			$harga = $_POST['harga-product-pulsa']; 
+			$deskripsi = $_POST['deskripsi-product-pulsa'];  
+			$nominal = $_POST['nominal-product-pulsa'];
+			addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal);
+		}
+		else if ($_POST['command'] == 'addProdukShipped'){
+			$kode_produk = $_POST['kode-product-shipped']; 
+			$nama_produk = $_POST['nama-product-shipped']; 
+			$harga = $_POST['harga-product-shipped']; 
+			$deskripsi = $_POST['deskripsi-product-shipped'];
+			$subKategori = $_POST['subkategori-product-shipped'];
+			$isAsuransi = $_POST['barang-asuransi'];
+			$stok = $_POST['stok-product-shipped'];
+			$barangBaru = $_POST['barang-baru'];
+			$minimalOrder = $_POST['minimal-order-product-shipped'];
+			$minimalGrosir = $_POST['minimal-grosir-product-shipped'];
+			$maksimalGrosir = $_POST['maksimal-grosir-product-shipped'];
+			$hargaGrosir = $_POST['harga-grosir-product-shipped'];
+			$uploadFoto = $_POST['upload-foto'];
+			addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto);
+		}
 	}
 
 	function connectDB() {
 		$host = "localhost";
-		$dbname = "andreramadhani";
-		$username = "andreramadhani";
-		$password = "copoajaloe28";
+		$dbname = "valianfil";
+		$username = "valianfil";
+		$password = "1234abcd";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
@@ -151,6 +175,44 @@
 		}
 		else {
 			echo "kosong";
+		}
+	}
+
+	function addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto){
+		
+		$connectDB = connectDB();
+		$sql = "INSERT INTO tokokeren.PRODUK(kode_produk, nama_produk, harga, deskripsi) VALUES($kode_produk, $nama_produk, $harga, $deskripsi)";
+
+		$sql2 = "SELECT kode FROM SUB_KATEGORI WHERE $nama_produk IS EXISTS";
+
+		$sql4 = "INSERT INTO tokokeren.SHIPPED_PRODUK(kode_produk, kategori, nama_toko, is_asuransi, stok, is_baru, min_order, min_grosir, max_grosir, harga_grosir, foto) VALUES($kode_produk, $sql2, $row['email'], $isAsuransi, $stok, $barangBaru, minimalOrder, $minimalGrosir,  $maksimalGrosir, $hargaGrosir, $uploadFoto)";
+		
+		$query1 = pg_query($connectDB, $sql);
+		$query2 = pg_query($connectDB, $sql2);
+		$query4 = pg_query($connectDB, $sql4);
+
+		if ($query1 && $query2 && $query4){
+			header("Location: ../index.php");
+		}
+		else{
+			die("Error: $query1 or Error: $query2 or Error: $query3 or Error: $query4");
+		}
+		
+	}
+
+	function addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal){
+		$connectDB = connectDB();
+		$sql = "INSERT INTO tokokeren.PRODUK(kode_produk, nama_produk, harga, deskripsi) VALUES($kode_produk, $nama_produk, $harga, $deskripsi)";
+		$sql2 = "INSERT INTO tokokeren.PRODUK_PULSA(kode_produk, nominal) VALUES($kode_produk, $nominal)";
+		
+		$query1 = pg_query($connectDB, $sql);
+		$query2 = pg_query($connectDB, $sql2);
+
+		if ($query1 && $query2) {
+			header("Location: ../index.php");
+		}
+		else{
+			die("Error: $query1 or $query2");
 		}
 	}
 ?>
