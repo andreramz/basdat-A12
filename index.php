@@ -4,21 +4,21 @@
 <html>
 	<head>
 		<?php include("layout/head.php"); ?>
-		<title>Home | TOKOKEREN</title>
+ 		<?php include("config/function.php"); ?>
+ 		<title>Home | TOKOKEREN</title>
 	</head>
 	<body>
 		<?php include("layout/navbar.php"); ?>
 		<main>
-			<div class="container">
+			<!--<div class="container"> -->
 				<div class="row">
-					<div class="col m1 l2"></div>
-					<div class="col s12 m10 l8">
+					<div class="col s12 m12 l12">
 						<div class="nav-content">
 						    <ul class="tabs tabs-transparent">
 							    <li class="tab"><a class="active black-text" href="#test1">Produk</a></li>
 							    <li class="tab"><a class="black-text" href="#test2">Kategori</a></li>
-							    <li class="tab"><a class="black-text" href="#test33">Toko</a></li>
-							    <li class="tab"><a class="black-text" href="#test44">Ranks</a></li>
+							    <li class="tab"><a class="black-text" href="#test3">Toko</a></li>
+							    <li class="tab"><a class="black-text" href="#test4">Ranks</a></li>
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'admin') { ?>
 							    <li class="tab"><a class="black-text" href="#create-jasa-kirim"><strong>Buat Jasa Kirim</strong></a></li>
 							    <li class="tab"><a class="black-text" href="#create-promo"><strong>Buat Promo</strong></a></li>
@@ -33,21 +33,20 @@
 								<?php } ?>
 
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'penjual') { ?>
-							    <li class="tab"><a class="black-text" href="#create-product-shipped"><strong>Buat Produk</strong></a></li>
+							    <li class="tab"><a class="black-text" href="#create-product-shipped"><strong>Tambah Produk</strong></a></li>
 
 							    <?php } ?>
 					    	</ul>
 						</div>			
 					</div>
-					<div class="col m1 l2"></div>
 				</div>
-			</div>
+			<!-- </div> -->
 			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
 			<div id="see-transaksi" class="col s12">
 				<div class="container">
 					<div class="row">
 						<div class="col m2 s12 block"></div>
-						<div class="col m8 s12 block">
+						<div class="col m12 s12 block">
 							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="transaksi-pulsa-button">Produk Pulsa</button>
 							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="transaksi-shipped-button">Produk Barang</button>
 							<div id="transaksi-pulsa" class="card-panel yellow lighten-3 black-text">
@@ -61,30 +60,25 @@
 											<th>Total Bayar</th>
 											<th>Nominal</th>
 											<th>Nomor</th>
-											<th>Ulasan</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>P0000001</td>
-											<td>Pulsa IM3</td>
-											<td>4/1/2016</td>
-											<td>SUDAH DIBAYAR</td>
-											<td>12000</td>
-											<td>10</td>
-											<td>081317963432</td>
-											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-pulsa-1">ULAS</a></td>
-										</tr>
-										<tr>
-											<td>P0000002</td>
-											<td>Listrik PLN</td>
-											<td>4/1/2016</td>
-											<td>BELUM DIBAYAR</td>
-											<td>23000</td>
-											<td>20</td>
-											<td>081532532231</td>
-											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-pulsa-2">ULAS</a></td>
-										</tr>
+										<?php
+										$result = lihat_transaksi_pulsa($_SESSION['email']);
+										while($row = pg_fetch_assoc($result)) {
+											echo 
+											"<tr>
+												<td>".$row['no_invoice']."</td>
+												<td>".$row['nama']."</td>
+												<td>".$row['tanggal']."</td>
+												<td>".$row['status']."</td>
+												<td>".$row['total_bayar']."</td>
+												<td>".$row['nominal']."</td>
+												<td>".$row['nomor']."</td>
+											</tr>";
+										}
+
+										?>
 									</tbody>
 								</table>
 							</div>
@@ -147,23 +141,34 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>S0000001</td>
-											<td>Fashion Keren</td>
-											<td>4/1/2016</td>
-											<td>BARANG SUDAH DIBAYAR</td>
-											<td>12000</td>
-											<td>Jl Veteran 45, Depok</td>
-											<td>25000</td>
-											<td>DPK9817421231</td>
-											<td>JNE OKE</td>
-											<td><a id="daftar-produk-1-button" class="waves-effect waves-light btn" href="#daftar-produk-1">DAFTAR PRODUK</a></td>
-										</tr>
+										<?php
+										$result = lihat_transaksi_shipped($_SESSION['email']);
+										while($row = pg_fetch_assoc($result)) {
+											echo 
+											"<tr>
+												<td>".$row['no_invoice']."</td>
+												<td>".$row['nama_toko']."</td>
+												<td>".$row['tanggal']."</td>
+												<td>".$row['status']."</td>
+												<td>".$row['total_bayar']."</td>
+												<td>".$row['alamat_kirim']."</td>
+												<td>".$row['biaya_kirim']."</td>
+												<td>".$row['no_resi']."</td>
+												<td>".$row['nama_jasa_kirim']."</td>
+												<td><a class='waves-effect waves-light btn' href='#daftar-produk-".$row['no_invoice']."'>DAFTAR PRODUK</a></td>
+											</tr>";
+										}
+
+										?>
 									</tbody>
 								</table>
 							</div>
-							<div id="daftar-produk-1" class="card-panel yellow lighten-3 black-text">
-								<table class="striped">
+							<?php
+							$result = lihat_transaksi_shipped($_SESSION['email']);
+							while($row = pg_fetch_assoc($result)) {
+								echo 
+								"<div id='daftar-produk-".$row['no_invoice']."' class='modal'>
+									<table class='striped'>
 									<thead>
 										<tr>
 											<th>Nama Produk</th>
@@ -174,26 +179,25 @@
 											<th>Ulasan</th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<td>Celana bagus 1</td>
-											<td>4</td>
-											<td>4</td>
-											<td>20000</td>
-											<td>80000</td>
-											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-shipped-1">ULAS</a></td>
-										</tr>
-										<tr>
-											<td>Baju cantik 2</td>
-											<td>1</td>
-											<td>1</td>
-											<td>15000</td>
-											<td>15000</td>
-											<td><a class="waves-effect waves-light btn" href="#modal-transaksi-shipped-2">ULAS</a></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+									<tbody>";
+									$daftar = lihat_daftar_produk($row['no_invoice']);
+									while($baris = pg_fetch_assoc($daftar)) {
+										echo 
+											"<tr>
+												<td>".$baris['nama']."</td>
+												<td>".$baris['berat']."</td>
+												<td>".$baris['kuantitas']."</td>
+												<td>".$baris['harga']."</td>
+												<td>".$baris['sub_total']."</td>
+												<td><a class='waves-effect waves-light btn' href='#'>ULAS</a></td>
+											</tr>";
+									}
+								echo
+									"</tbody>
+									</table>
+								</div>";
+							}
+							?>
 							<div id="modal-transaksi-shipped-1" class="modal">
 								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-shipped-1').modal('close'); return false;">
 							  	<div class="modal-content">
@@ -537,7 +541,7 @@
 				</div>
 			</div>
 			<?php } ?>
-			<div id="test33" class="col s12">
+			<div id="test3" class="col s12">
 				<div class="container">
 					<div class="row">
 						<div class="col m2 s12 block"></div>
@@ -548,7 +552,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="test44" class="col s12">
+			<div id="test4" class="col s12">
 				<div class="container">
 					<div class="row">
 						<div class="col m2 s12 block"></div>
@@ -561,8 +565,6 @@
 			</div>
 		</main>
 		<?php include("layout/footer.php"); ?>
-		<script src="src/js/jquery-3.1.1.min.js"></script>
-		<script src="materialize/js/materialize.js"></script>
 		<script>
 			$(".button-collapse").sideNav();
 			$(".indicator").css("background-color: black;");
@@ -572,6 +574,13 @@
 			$('#modal-transaksi-pulsa-2').modal();
 			$('#modal-transaksi-shipped-1').modal();
 			$('#modal-transaksi-shipped-2').modal();
+			<?php 
+			$result = lihat_transaksi_shipped($_SESSION['email']);
+			while($row = pg_fetch_assoc($result)) {
+				echo 
+				"$('#daftar-produk-".$row['no_invoice']."').modal();";
+			}
+			?>
 
 			$("#transaksi-pulsa").hide();
 			$("#transaksi-shipped").hide();
