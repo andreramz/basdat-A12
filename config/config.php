@@ -7,6 +7,11 @@
 		}
 	}
 	else {
+		if ($_POST['type'] == 'checkEmail') {
+			$typed = $_POST['typed'];
+			checkEmail($typed);
+		}
+
 		if ($_POST['command'] == 'login') {
 			$email = $_POST['email'];
 			$password = $_POST['password'];
@@ -17,14 +22,15 @@
 				$email = $_POST['email'];
 				$password = $_POST['password'];
 				$name = $_POST['name'];
+				$datebirth = $_POST['datebirth'];
 				$gender = $_POST['gender'];
 				$phone = $_POST['phone'];
 				$address = $_POST['address'];
-				register($email, $password, $name, $gender, $phone, $address);
+				register($email, $password, $name, $gender, $datebirth, $phone, $address);
 			}
 			else {
 				$_SESSION['regStatus'] = 'gagal';
-				header("Location: register.php");
+				header("Location: ../register.php");
 			}
 		}
 	}
@@ -116,12 +122,35 @@
 		header("Location: ../");
 	}
 
-	function register($email, $password, $name, $gender, $phone, $address) {
+	function register($email, $password, $name, $gender, $datebirth, $phone, $address) {
 		$connectDB = connectDB();
-		$sql = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ($email, $password, $name, $gender, CURRENT_DATE, $phone, $address)";
-		if (!$sql) {
-			die("Error: $sql");
+		$sql1 = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ('$email', '$password', '$name', '$gender', '$datebirth', '$phone', '$address')";
+		$sql2 = "INSERT INTO tokokeren.PELANGGAN (email, is_penjual, nilai_reputasi, poin) VALUES ('$email', FALSE, NULL, 0)";
+
+		$query1 = pg_query($connectDB, $sql1);
+		$query2 = pg_query($connectDB, $sql2);
+		
+		if ($query1 && $query2) {
+			$_SESSION['regStatus'] = 'success';
+			$_SESSION['logged'] = $name;
+			$_SESSION['role'] = 'pembeli';
+			header("Location: ../index.php");
 		}
+		else {
+			die("Error: $query1 or Error: $query2");
+		}
+	}
+
+	function checkEmail($email) {
+		$connectDB = connectDB();
+		$sql = "SELECT email FROM tokokeren.PENGGUNA WHERE email = '$email'";
 		$query = pg_query($connectDB, $sql);
+
+		if (pg_num_rows($query) > 0) {
+			echo "ada";
+		}
+		else {
+			echo "kosong";
+		}
 	}
 ?>

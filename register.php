@@ -15,12 +15,20 @@
 					<div class="col s12 m8 l8">
 						<h4>Register</h4>
 						<p>Let's advance together with Tokokeren by filling all of the datas below.</p>
+						<?php if (isset($_SESSION['regStatus']) && $_SESSION['regStatus'] == 'gagal') {?>
+						<div>
+							<p class="red-text center-align">Mohon diperiksa kembali kesalahan input data.</p>
+						</div>
+						<?php }
+							unset($_SESSION['regStatus']);
+						 ?>
 						<div class="card-panel yellow lighten-3">
 							<form action="config/config.php" method="post">
 								<div class="input-field">
 									<input id="email" type="email" name="email" class="validate">
 									<label for="email">Email</label>
 								</div>
+								<span id="email-alert" class="red-text"></span>
 								<div class="input-field">
 									<input id="password" type="password" name="password" class="validate">
 									<label for="password">Password</label>
@@ -44,7 +52,7 @@
 								    <label for="gender">Jenis Kelamin</label>
 								</div>
 								<div class="input-field">
-									<input id="datebirth" type="date" class="datepicker validate">
+									<input id="datebirth" name="datebirth" type="date" class="datepicker validate">
 								    <label for="datebirth">Tanggal Lahir</label>
 								</div>
 								<div class="input-field">
@@ -77,18 +85,19 @@
 			selectMonths: true, // Creates a dropdown to control month
 			selectYears: 100 // Creates a dropdown of 15 years to control year
 		});
+		var terdaftar = false;
 
-		function passAlert() {
-			var value = $("#password").val();
-			if (value.length < 6) {
+		$("#password").on("input propertychange", function() {
+			var pass = $("#password").val();
+			if (pass.length < 6) {
 				$("#pass-alert").html("Password setidaknya memiliki 6 karakter");
 			}
 			else {
 				$("#pass-alert").html("");
 			}
-		}
+		});
 
-		function repPassAlert() {
+		$("#rep-password").on("input propertychange", function() {
 			var rep = $("#rep-password").val();
 			var pass = $("#password").val();
 			if (rep != pass) {
@@ -97,9 +106,9 @@
 			else {
 				$("#rep-pass-alert").html("");
 			}
-		}
+		});
 
-		function phoneAlert() {
+		$("#phone").on("input propertychange", function() {
 			var phone = $("#phone").val();
 			var phoneRegex = /^08[1235789][1-9][0-9]{6,8}$/;
 			if (!phoneRegex.test(phone)) {
@@ -108,19 +117,32 @@
 			else {
 				$("#phone-alert").html("");
 			}
-		}
+		});
 
-		function isValid() {
+		$("#password, #rep-password, #phone").on("input propertychange", function() {
 			var rep = $("#rep-password").val();
 			var pass = $("#password").val();
 			var phone = $("#phone").val();
 			var phoneRegex = /^08[1235789][1-9][0-9]{6,8}$/;
-			if (value.length < 6 || rep != pass || !phoneRegex.test(phone)) {
+			if (pass.length < 6 || rep != pass || !phoneRegex.test(phone) || terdaftar) {
 				$("#validator").val("salah");
 			}
 			else {
 				$("#validator").val("benar");
 			}
-		}
+		});
+
+		$("#email").on("input propertychange", function() {
+			$.post("config/config.php", {type: "checkEmail", typed: $("#email").val()}, function(response) {
+				if (response == "ada") {
+					$("#email-alert").html("Email sudah terdaftar");
+					terdaftar = true;
+				}
+				else if (response == "kosong") {
+					$("#email-alert").html("");
+					terdaftar = false;
+				}
+			});
+		});
 	</script>
 </html>

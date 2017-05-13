@@ -40,6 +40,13 @@
 					</div>
 				</div>
 			<!-- </div> -->
+			<?php if (isset($_SESSION['regStatus']) && $_SESSION['regStatus'] == 'success') { ?>
+			<div>
+				<p class="green-text center-align" style="font-size: 17pt;">Account registration success! Now, you can enjoy shopping at Tokokeren.</p>
+			</div>
+			<?php }
+			unset($_SESSION['regStatus']);
+			 ?>
 			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
 			<div id="see-transaksi" class="col s12">
 				<div class="container">
