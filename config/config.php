@@ -11,6 +11,10 @@
 			$typed = $_POST['typed'];
 			checkEmail($typed);
 		}
+		else if ($_POST['type'] == 'category') {
+			$category = $_POST['category'];
+			checkCategory($category);
+		}
 
 		if ($_POST['command'] == 'login') {
 			$email = $_POST['email'];
@@ -71,7 +75,7 @@
 		
 		while ($row = pg_fetch_assoc($query1)) {
 			if ($email === $row['email'] && $password == $row['password']) {
-				if ($row['is_penjual'] == true) {
+				if ($row['is_penjual'] == 't') {
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'penjual';
 					header("Location: ../");
@@ -119,7 +123,7 @@
 	function logout() {
 		unset($_SESSION['logged']);
 		unset($_SESSION['role']);
-		header("Location: ../");
+		header("Location: ../login.php");
 	}
 
 	function register($email, $password, $name, $gender, $datebirth, $phone, $address) {
@@ -151,6 +155,19 @@
 		}
 		else {
 			echo "kosong";
+		}
+	}
+
+	function checkCategory($category) {
+		$connectDB = connectDB();
+		$sql = "SELECT kode FROM tokokeren.KATEGORI_UTAMA WHERE kode = '$category'";
+		$query = pg_query($connectDB, $sql);
+
+		if(pg_num_rows($query) > 0) {
+			echo "salah";
+		}
+		else {
+			echo "benar";
 		}
 	}
 ?>
