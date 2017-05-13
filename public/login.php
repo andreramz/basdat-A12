@@ -22,7 +22,7 @@
 						<p>Sign in to join up and enjoy more features in Tokokeren.</p>
 						<div class="card-panel yellow lighten-3">
 							<span class="red-text text-darken-3"><?php
-								if (isset($_SESSION['status']) || $_SESSION['status'] == 'gagal') {
+								if (isset($_SESSION['status']) && $_SESSION['status'] == 'gagal') {
 									echo "Email atau password salah.";
 									unset($_SESSION['status']);
 								}

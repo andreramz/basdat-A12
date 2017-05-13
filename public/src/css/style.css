@@ -27,7 +27,7 @@ main {
 	margin: auto;
 }
 
-.nav-content {
+.nav-content.tabs.tab {
 	align-items: center;
 }
 
