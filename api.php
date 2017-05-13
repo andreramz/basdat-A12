@@ -93,7 +93,7 @@
 		$host = "localhost";
 		$dbname = "postgres";
 		$username = "postgres";
-		$password = "<redacted>";
+		$password = "";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;

@@ -41,6 +41,13 @@
 					</div>
 				</div>
 			<!-- </div> -->
+			<?php if (isset($_SESSION['regStatus']) && $_SESSION['regStatus'] == 'success') { ?>
+			<div>
+				<p class="green-text center-align" style="font-size: 17pt;">Account registration success! Now, you can enjoy shopping at Tokokeren.</p>
+			</div>
+			<?php }
+			unset($_SESSION['regStatus']);
+			 ?>
 			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
 			<div id="see-transaksi" class="col s12">
 				<div class="container">
@@ -83,7 +90,7 @@
 								</table>
 							</div>
 							<div id="modal-transaksi-pulsa-1" class="modal">
-								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-pulsa-1').modal('close'); return false;">
+								<form class="review-form">
 							  	<div class="modal-content">
 									<div class="input-field">
 										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="P0000001" disabled required>
@@ -104,7 +111,7 @@
 								</form>
 							</div>
 							<div id="modal-transaksi-pulsa-2" class="modal">
-								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-pulsa-2').modal('close'); return false;">
+								<form class="review-form">
 							  	<div class="modal-content">
 									<div class="input-field">
 										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="P0000002" disabled required>
@@ -199,7 +206,7 @@
 							}
 							?>
 							<div id="modal-transaksi-shipped-1" class="modal">
-								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-shipped-1').modal('close'); return false;">
+								<form class="review-form">
 							  	<div class="modal-content">
 									<div class="input-field">
 										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000001" disabled required>
@@ -220,7 +227,7 @@
 								</form>
 							</div>
 							<div id="modal-transaksi-shipped-2" class="modal">
-								<form onsubmit="Materialize.toast('Pembuatan ulasan berhasil!', 4000); $('#modal-transaksi-shipped-2').modal('close'); return false;">
+								<form class="review-form">
 							  	<div class="modal-content">
 									<div class="input-field">
 										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000002" disabled required>
@@ -288,6 +295,7 @@
 									<input id="category-code" type="text" name="category-code" class="validate">
 									<label for="category-code">Kode Kategori</label>
 								</div>
+								<span id="catcode-alert" class="red-text"></span>
 								<div class="input-field">
 									<input id="category-name" type="text" name="category-name" class="validate">
 									<label for="category-name">Nama Kategori</label>
@@ -313,13 +321,13 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form onsubmit="Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
+								<form id="create-jasa-kirim-form">
 								<div class="input-field">
 									<input id="jasa-kirim-nama" type="text" name="jasa-kirim-nama" class="validate" required>
 									<label for="jasa-kirim-nama">Nama</label>
 								</div>
 								<div class="input-field">
-									<input id="jasa-kirim-lama-kirim" type="number" name="jasa-kirim-lama-kirim" class="validate" required>
+									<input id="jasa-kirim-lama-kirim" type="text" name="jasa-kirim-lama-kirim" class="validate" required>
 									<label for="jasa-kirim-lama-kirim">Lama Kirim (dalam satuan hari)</label>
 								</div>
 								<div class="input-field">
@@ -340,7 +348,7 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form onsubmit="Materialize.toast('Pembuatan Promo berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
+								<form id="create-promo-form">
 								<div class="input-field">
 									<input id="promo-deskripsi" type="text" name="promo-deskripsi" class="validate" required>
 									<label for="promo-deskripsi">Deskripsi</label>
@@ -359,14 +367,12 @@
 								</div>
 								<div class="input-field">
 									<select id="promo-kategori" name="promo-kategori" class="validate" required>
-										<option>Pakaian</option>
 									</select>
 									<label for="promo-kategori">Kategori</label>
 								</div>
 								<div class="input-field">
 									<select id="promo-subkategori" name="promo-subkategori" class="validate" required>
-										<option>Baju</option>
-										<option>Celana</option>
+										<option>Wait to load!</option>
 									</select>
 									<label for="promo-subkategori">Sub Kategori</label>
 								</div>
@@ -384,7 +390,7 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form action="./config/config.php" method="post" onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
+								<form onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
 								<div class="input-field">
 									<input id="kode-product-pulsa" type="text" name="kode-product-pulsa" class="validate" required>
 									<label for="kode-product-pulsa">Kode Produk</label>
@@ -405,7 +411,6 @@
 									<input id="nominal-product-pulsa" type="text" name="nominal-product-pulsa" class="validate" required>
 									<label for="nominal-product-pulsa">Nominal</label>
 								</div>
-								<input type="hidden" name="command" value="addProdukPulsa">
 								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
@@ -475,7 +480,7 @@
 										<label for="nama-product-shipped">Nama Produk</label>
 									</div>
 									<div class="input-field">
-										<input id="harga-product-shipped" type="text" name="harga-product-shipped" class=" validate" required>
+										<input id="harga-product-shipped" type="date" name="harga-product-shipped" class="datepicker validate" required>
 										<label for="harga-product-shipped">Harga</label>
 									</div>
 									<div class="input-field">
@@ -483,32 +488,22 @@
 										<label for="deskripsi-product-shipped">Deskripsi</label>
 									</div>
 									<div class="input-field">
-										<select id="subkategori-product-shipped" action="./config/config.php" name="subkategori-product-shipped">
-											<option value="" disabled selected>Pilih...</option>
-											<?php
-												$host = "localhost";
-												$dbname = "valianfil";
-												$username = "valianfil";
-												$password = "1234abcd";
+										<a class='dropdown-button yellow darken-2 black-text waves-effect waves-light btn' href='#' data-activates='dropdown1'>Sub Kategori</a>
 
-												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
-												$sql = "SELECT nama FROM tokokeren.SUB_KATEGORI";
-												$sql_res = pg_query($sql);
-												
-												while ($row = pg_fetch_assoc($sql_res)){
-													echo "<option value=".$row['nama'].">".$row['nama']."</option>";
-												} 
-
-											?>
-									    </select>
-									    <label for="subkategori-product-shipped">Sub Kategori</label>
+										<ul id='dropdown1' class='dropdown-content'>
+											<li><a href="#!">one</a></li>
+											<li><a href="#!">two</a></li>
+											<li><a href="#!">three</a></li>
+											<li><a href="#!">view_module</a></li>
+											<li><a href="#!">cloud</a></li>
+										</ul>
 									</div>
 									<div class="input-field">
 										<p>Barang Asuransi</p>
-										<input type="radio" name="barang-asuransi" value="true" id="barang-asuransi-ya"/>
-					       				<label for="barang-asuransi-ya">Ya</label>
-					       				<input type="radio" name="barang-asuransi" value="false" id="barang-asuransi-tidak"/>
-					       				<label for="barang-asuransi-tidak">Tidak</label>
+										<input name="barang-asuransi" type="radio" id="test3" />
+										<label for="test3">Ya</label>
+										<input name="barang-asuransi" type="radio" id="test4" />
+										<label for="test4">Tidak</label>
 									</div>
 									<div class="input-field">
 										<input id="stok-product-shipped" type="text" name="stok-product-shipped" class="validate" required>
@@ -516,10 +511,10 @@
 									</div>
 									<div class="input-field">
 										<p>Barang Baru</p>
-										<input name="barang-baru" type="radio" value="true" id="barang-baru-ya"/>
-					       				<label for="barang-baru-ya">Ya</label>
-					       				<input name="barang-baru" type="radio" value="false" id="barang-baru-tidak"/>
-					       				<label for="barang-baru-tidak">Tidak</label>
+										<input name="barang-baru" type="radio" id="test5" />
+										<label for="test5">Ya</label>
+										<input name="barang-baru" type="radio" id="test6" />
+										<label for="test6">Tidak</label>
 									</div>
 									<div class="input-field">
 										<input id="minimal-order-product-shipped" type="text" name="minimal-order-product-shipped" class="validate" required>
@@ -542,9 +537,8 @@
 										<div class="btn">
 								        	<span>File</span>
 								        </div>
-								        <input type="file" name="upload-foto">
+								        <input type="file">
 									</div>
-									<input type="hidden" name="command" value="addProdukShipped">
 									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
@@ -617,7 +611,7 @@
 				$("#daftar-produk-1").show();
 			});
 			$("#subcategory-button").click(function() {
-				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
+				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate sub-category'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
 				forms++;
 			});
 			$('.datepicker').pickadate({
@@ -625,7 +619,139 @@
 				selectYears: 15 // Creates a dropdown of 15 years to control year
 			});
 			$(document).ready(function() {
+				$.ajax({
+		           type: "GET",
+		           url: "api.php?command=get_categories",
+		           success: function(data)
+		           {
+		           		var res = JSON.parse(data);
+		           		if (res.status == 'success') {
+		           			$("#promo-kategori").empty();
+		           			var options = '';
+							$.each(res.response, function() {
+								options += '<option value="' + this.kode + '">' + this.nama + '</option>';
+							});
+							$("#promo-kategori").html(options);
+							$("#promo-kategori").material_select();
+		           		}
+		           		else if (res.status == 'failed') {
+		           			Materialize.toast('Error terjadi!', 4000); 
+		           		}
+		           }
+		       });
+				$('#promo-kategori').change(function() {
+					$.ajax({
+			           type: "GET",
+			           url: "api.php?command=get_subcategories&category=" + $('#promo-kategori').val(),
+			           success: function(data)
+			           {
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			var options = $("#promo-subkategori");
+			           			options.empty();
+								$.each(res.response, function() {
+								    options.append($("<option />").val(this.kode).text(this.nama));
+								});
+								$("#promo-subkategori").material_select();
+			           		}
+			           		else if (res.status == 'failed') {
+			           			Materialize.toast('Error terjadi!', 4000); 
+			           		}
+			           }
+			       });
+				});
+				$("#create-jasa-kirim-form").submit(function(e) {
+				    var url = "api.php?command=create_jasa_kirim"; // the script where you handle the form input.
+				    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#create-jasa-kirim-form").serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); 
+								$('ul.tabs').tabs('select_tab', 'test1');
+			           		}
+			           		else if (res.status == 'failed') {
+			           			Materialize.toast('Pembuatan Jasa Kirim gagal!', 4000); 
+			           		}
+			           }
+			      	});
+				    e.preventDefault(); // avoid to execute the actual submit of the form.
+				});
+				$("#create-promo-form").submit(function(e) {
+				    var url = "api.php?command=create_promo"; // the script where you handle the form input
+				    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#create-promo-form").serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
+								$('ul.tabs').tabs('select_tab', 'test1');
+			           		}
+			           		else if (res.status == 'failed') {
+			           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
+			           		}
+			           }
+			      	});
+				    e.preventDefault(); // avoid to execute the actual submit of the form.
+				});
+				$("#create-promo-form").submit(function(e) {
+				    var url = "api.php?command=create_promo"; // the script where you handle the form input
+				    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $(this).serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
+								$('ul.tabs').tabs('select_tab', 'test1');
+			           		}
+			           		else if (res.status == 'failed') {
+			           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
+			           		}
+			           }
+			      	});
+				    e.preventDefault(); // avoid to execute the actual submit of the form.
+				});
+				$(".review-form").submit(function(e) {
+				    var url = "api.php?command=create_review"; // the script where you handle the form input
+				    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $(".review-form").serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
+								$('ul.tabs').tabs('select_tab', 'test1');
+			           		}
+			           		else if (res.status == 'failed') {
+			           			Materialize.toast('Pembuatan Review gagal!', 4000); 
+			           		}
+			           }
+			      	});
+				    e.preventDefault(); // avoid to execute the actual submit of the form.
+				});
 				$('select').material_select();
+				$('#category-code').on("input propertychange", function() {
+					var catcode = $("#category-code").val();
+					$.post("config/config.php", {type: "category", typed: catcode}, function(response) {
+						if (response == "benar") {
+							$("#catcode-alert").html("");
+						}
+						else {
+							$("#catcode-alert").html("Kategori tidak unik atau sudah ada");
+						}
+					});
+				});
 			});
 		</script>
 
