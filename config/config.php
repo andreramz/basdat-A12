@@ -37,9 +37,9 @@
 
 	function connectDB() {
 		$host = "localhost";
-		$dbname = "andreramadhani";
-		$username = "andreramadhani";
-		$password = "copoajaloe28";
+		$dbname = "tokokeren";
+		$username = "postgres";
+		$password = "9d6cf99859";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
@@ -74,11 +74,15 @@
 				if ($row['is_penjual'] == true) {
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'penjual';
+					$_SESSION['email'] = $email;
+
 					header("Location: ../");
 				}
 				else {
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'pembeli';
+					$_SESSION['email'] = $email;
+
 					header("Location: ../");
 				}
 			}
@@ -88,6 +92,8 @@
 			if ($email === $row2['email'] && $password == $row2['password']) {
 				$_SESSION['logged'] = $row2['nama'];
 				$_SESSION['role'] = 'admin';
+				$_SESSION['email'] = $email;
+
 				header("Location: ../");
 			}
 		}
