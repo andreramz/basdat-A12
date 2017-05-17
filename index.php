@@ -372,7 +372,7 @@
 								</div>
 								<div class="input-field">
 									<select id="promo-subkategori" name="promo-subkategori" class="validate" required>
-										<option>Wait to load!</option>
+										<option selected disabled>Pilih kategori terlebih dahulu!</option>
 									</select>
 									<label for="promo-subkategori">Sub Kategori</label>
 								</div>
@@ -628,6 +628,7 @@
 		           		if (res.status == 'success') {
 		           			$("#promo-kategori").empty();
 		           			var options = '';
+		           			options += '<option selected disabled>Pilih Kategori</option>';
 							$.each(res.response, function() {
 								options += '<option value="' + this.kode + '">' + this.nama + '</option>';
 							});
@@ -649,6 +650,7 @@
 			           		if (res.status == 'success') {
 			           			var options = $("#promo-subkategori");
 			           			options.empty();
+			           			options.append('<option selected disabled>Pilih Subkategori</option>');
 								$.each(res.response, function() {
 								    options.append($("<option />").val(this.kode).text(this.nama));
 								});
@@ -700,26 +702,6 @@
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
-				$("#create-promo-form").submit(function(e) {
-				    var url = "api.php?command=create_promo"; // the script where you handle the form input
-				    $.ajax({
-			           type: "POST",
-			           url: url,
-			           data: $(this).serialize(), // serializes the form's elements.
-			           success: function(data)
-			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
-			           		}
-			           		else if (res.status == 'failed') {
-			           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
-			           		}
-			           }
-			      	});
-				    e.preventDefault(); // avoid to execute the actual submit of the form.
-				});
 				$(".review-form").submit(function(e) {
 				    var url = "api.php?command=create_review"; // the script where you handle the form input
 				    $.ajax({
@@ -741,6 +723,9 @@
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
 				$('select').material_select();
+				$('#promo-periode-awal').change(function() {
+					$('#promo-periode-akhir').pickadate('picker').set('min', new Date($('#promo-periode-awal').val()));
+				});
 				$('#category-code').on("input propertychange", function() {
 					var catcode = $("#category-code").val();
 					$.post("config/config.php", {type: "category", typed: catcode}, function(response) {
