@@ -25,7 +25,7 @@
 
 	function lihat_daftar_produk($no_invoice) {
 		$connectDB = connectDB();
-		$sql = "SELECT P.nama, L.berat, L.kuantitas, L.harga, L.sub_total FROM tokokeren.PRODUK AS P, tokokeren.LIST_ITEM AS L WHERE L.no_invoice = '".$no_invoice."' AND L.kode_produk = P.kode_produk";
+		$sql = "SELECT P.kode_produk, P.nama, L.berat, L.kuantitas, L.harga, L.sub_total FROM tokokeren.PRODUK AS P, tokokeren.LIST_ITEM AS L WHERE L.no_invoice = '".$no_invoice."' AND L.kode_produk = P.kode_produk";
 
 		return pg_query($connectDB, $sql);
 	}

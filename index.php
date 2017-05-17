@@ -89,48 +89,6 @@
 									</tbody>
 								</table>
 							</div>
-							<div id="modal-transaksi-pulsa-1" class="modal">
-								<form class="review-form">
-							  	<div class="modal-content">
-									<div class="input-field">
-										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="P0000001" disabled required>
-										<label for="ulasan-kode-produk">Kode Produk</label>
-									</div>
-									<div class="input-field">
-										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
-										<label for="ulasan-rating">Rating</label>
-									</div>
-									<div class="input-field">
-										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
-										<label for="ulasan-komentar">Komentar</label>
-									</div>
-								</div>
-							    <div class="modal-footer">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
-							    </div>
-								</form>
-							</div>
-							<div id="modal-transaksi-pulsa-2" class="modal">
-								<form class="review-form">
-							  	<div class="modal-content">
-									<div class="input-field">
-										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="P0000002" disabled required>
-										<label for="ulasan-kode-produk">Kode Produk</label>
-									</div>
-									<div class="input-field">
-										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
-										<label for="ulasan-rating">Rating</label>
-									</div>
-									<div class="input-field">
-										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
-										<label for="ulasan-komentar">Komentar</label>
-									</div>
-								</div>
-							    <div class="modal-footer">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
-							    </div>
-								</form>
-							</div>
 							<div id="transaksi-shipped" class="card-panel yellow lighten-3 black-text">
 								<table class="striped">
 									<thead>
@@ -196,7 +154,7 @@
 												<td>".$baris['kuantitas']."</td>
 												<td>".$baris['harga']."</td>
 												<td>".$baris['sub_total']."</td>
-												<td><a class='waves-effect waves-light btn' href='#'>ULAS</a></td>
+												<td><a class='waves-effect waves-light btn review-btn' data-kode-produk='".$baris['kode_produk']."'>ULAS</a></td>
 											</tr>";
 									}
 								echo
@@ -205,32 +163,11 @@
 								</div>";
 							}
 							?>
-							<div id="modal-transaksi-shipped-1" class="modal">
-								<form class="review-form">
+							<div id="modal-review" class="modal">
+								<form id="review-form">
 							  	<div class="modal-content">
 									<div class="input-field">
-										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000001" disabled required>
-										<label for="ulasan-kode-produk">Kode Produk</label>
-									</div>
-									<div class="input-field">
-										<input id="ulasan-rating" type="number" min="1" max="5" name="ulasan-rating" class="validate" required>
-										<label for="ulasan-rating">Rating</label>
-									</div>
-									<div class="input-field">
-										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
-										<label for="ulasan-komentar">Komentar</label>
-									</div>
-								</div>
-							    <div class="modal-footer">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
-							    </div>
-								</form>
-							</div>
-							<div id="modal-transaksi-shipped-2" class="modal">
-								<form class="review-form">
-							  	<div class="modal-content">
-									<div class="input-field">
-										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000002" disabled required>
+										<input id="ulasan-kode-produk" type="text" name="ulasan-kode-produk" class="validate" value="S0000001" readonly required>
 										<label for="ulasan-kode-produk">Kode Produk</label>
 									</div>
 									<div class="input-field">
@@ -573,52 +510,63 @@
 		</main>
 		<?php include("layout/footer.php"); ?>
 		<script>
-			$(".button-collapse").sideNav();
-			$(".indicator").css("background-color: black;");
-			$("#category").hide();
-
-			$('#modal-transaksi-pulsa-1').modal();
-			$('#modal-transaksi-pulsa-2').modal();
-			$('#modal-transaksi-shipped-1').modal();
-			$('#modal-transaksi-shipped-2').modal();
-			<?php 
-			$result = lihat_transaksi_shipped($_SESSION['email']);
-			while($row = pg_fetch_assoc($result)) {
-				echo 
-				"$('#daftar-produk-".$row['no_invoice']."').modal();";
-			}
-			?>
-
-			$("#transaksi-pulsa").hide();
-			$("#transaksi-shipped").hide();
-			$("#daftar-produk-1").hide();
-			var forms = 1;
-			$("#category-button").click(function() {
-				$("#category").show();
-				$("#category-button").hide();
-			});
-			$("#transaksi-pulsa-button").click(function() {
-				$("#transaksi-pulsa").show();
-				$("#transaksi-pulsa-button").hide();
-				$("#transaksi-shipped-button").hide();
-			});
-			$("#transaksi-shipped-button").click(function() {
-				$("#transaksi-shipped").show();
-				$("#transaksi-pulsa-button").hide();
-				$("#transaksi-shipped-button").hide();
-			});
-			$("#daftar-produk-1-button").click(function() {
-				$("#daftar-produk-1").show();
-			});
-			$("#subcategory-button").click(function() {
-				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate sub-category'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
-				forms++;
-			});
-			$('.datepicker').pickadate({
-				selectMonths: true, // Creates a dropdown to control month
-				selectYears: 15 // Creates a dropdown of 15 years to control year
-			});
 			$(document).ready(function() {
+				$(".button-collapse").sideNav();
+				$(".indicator").css("background-color: black;");
+				$("#category").hide();
+				<?php 
+				$result = lihat_transaksi_shipped($_SESSION['email']);
+				while($row = pg_fetch_assoc($result)) {
+					echo 
+					"$('#daftar-produk-".$row['no_invoice']."').modal();";
+				}
+				?>
+
+				$("#transaksi-pulsa").hide();
+				$("#transaksi-shipped").hide();
+				$("#daftar-produk-1").hide();
+				var forms = 1;
+				$("#category-button").click(function() {
+					$("#category").show();
+					$("#category-button").hide();
+				});
+				$("#transaksi-pulsa-button").click(function() {
+					$("#transaksi-pulsa").show();
+					$("#transaksi-pulsa-button").hide();
+					$("#transaksi-shipped-button").hide();
+				});
+				$("#transaksi-shipped-button").click(function() {
+					$("#transaksi-shipped").show();
+					$("#transaksi-pulsa-button").hide();
+					$("#transaksi-shipped-button").hide();
+				});
+				$("#daftar-produk-1-button").click(function() {
+					$("#daftar-produk-1").show();
+				});
+				$("#subcategory-button").click(function() {
+					$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate sub-category'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
+					forms++;
+				});
+
+				$('#category-code').on("input propertychange", function() {
+					var catcode = $("#category-code").val();
+					$.post("config/config.php", {type: "category", typed: catcode}, function(response) {
+						if (response == "benar") {
+							$("#catcode-alert").html("");
+						}
+						else {
+							$("#catcode-alert").html("Kategori tidak unik atau sudah ada");
+						}
+					});
+				});
+
+				$('select').material_select();
+				$('.modal').modal();
+				$('.datepicker').pickadate({
+					selectMonths: true, // Creates a dropdown to control month
+					selectYears: 15 // Creates a dropdown of 15 years to control year
+				});
+
 				$.ajax({
 		           type: "GET",
 		           url: "api.php?command=get_categories",
@@ -636,10 +584,11 @@
 							$("#promo-kategori").material_select();
 		           		}
 		           		else if (res.status == 'failed') {
+			           		console.error('Error using API, response: ' + JSON.stringify(res.response));
 		           			Materialize.toast('Error terjadi!', 4000); 
 		           		}
 		           }
-		       });
+		       	});
 				$('#promo-kategori').change(function() {
 					$.ajax({
 			           type: "GET",
@@ -657,6 +606,7 @@
 								$("#promo-subkategori").material_select();
 			           		}
 			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
 			           			Materialize.toast('Error terjadi!', 4000); 
 			           		}
 			           }
@@ -676,6 +626,7 @@
 								$('ul.tabs').tabs('select_tab', 'test1');
 			           		}
 			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
 			           			Materialize.toast('Pembuatan Jasa Kirim gagal!', 4000); 
 			           		}
 			           }
@@ -696,18 +647,23 @@
 								$('ul.tabs').tabs('select_tab', 'test1');
 			           		}
 			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
 			           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
 			           		}
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
-				$(".review-form").submit(function(e) {
+				$('.review-btn').click(function() {
+					$('#modal-review #ulasan-kode-produk').val($(this).attr('data-kode-produk'));
+					$('#modal-review').modal('open');
+				});
+				$("#review-form").submit(function(e) {
 				    var url = "api.php?command=create_review"; // the script where you handle the form input
 				    $.ajax({
 			           type: "POST",
 			           url: url,
-			           data: $(".review-form").serialize(), // serializes the form's elements.
+			           data: $("#review-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
 			           		var res = JSON.parse(data);
@@ -716,26 +672,15 @@
 								$('ul.tabs').tabs('select_tab', 'test1');
 			           		}
 			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
 			           			Materialize.toast('Pembuatan Review gagal!', 4000); 
 			           		}
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
-				$('select').material_select();
 				$('#promo-periode-awal').change(function() {
 					$('#promo-periode-akhir').pickadate('picker').set('min', new Date($('#promo-periode-awal').val()));
-				});
-				$('#category-code').on("input propertychange", function() {
-					var catcode = $("#category-code").val();
-					$.post("config/config.php", {type: "category", typed: catcode}, function(response) {
-						if (response == "benar") {
-							$("#catcode-alert").html("");
-						}
-						else {
-							$("#catcode-alert").html("Kategori tidak unik atau sudah ada");
-						}
-					});
 				});
 			});
 		</script>
