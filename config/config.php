@@ -7,7 +7,7 @@
 		}
 	}
 	else {
-		if ($_POST['type'] == 'checkEmail') {
+		if (isset($_POST['type']) && $_POST['type'] == 'checkEmail') {
 			$typed = $_POST['typed'];
 			checkEmail($typed);
 		}
@@ -33,15 +33,83 @@
 				header("Location: ../register.php");
 			}
 		}
-		else if ($_POST['command'] == 'addProdukPulsa'){
+
+		if ($_POST['command'] == 'addProdukPulsa'){
+			if (isset($_SESSION['logged'])) {
+				$username = $_SESSION['logged'];
+			}
 			$kode_produk = $_POST['kode-product-pulsa']; 
 			$nama_produk = $_POST['nama-product-pulsa']; 
 			$harga = $_POST['harga-product-pulsa']; 
 			$deskripsi = $_POST['deskripsi-product-pulsa'];  
 			$nominal = $_POST['nominal-product-pulsa'];
+			$error = 't';
+			if(strlen($kode_produk) == 0){
+				echo "kode produk kosong";
+				echo"";
+				$error = 'f';
+			}
+			if (strlen($kode_produk) != 8){
+				echo "Kode produk harus di isi dengan tepat 8 karakter";
+				echo"";
+				$error = 'f';
+			}
+			checkProduk($kode_produk, $error);
+			if(strlen($nama_produk) == 0){
+					echo "nama produk kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (strlen($nama_produk) < 1 || strlen($nama_produk) > 100){
+				echo "nama produk tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($harga) == 0){
+					echo "harga kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($harga)){
+				if ($harga > 9999999999 || $harga < 0.01){
+					echo "harga tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "harga tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($nominal) == 0){
+					echo "nominal kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($nominal)){
+				if($nominal < 1){
+					echo "nominal tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "nominal tidak valid";
+				echo "";
+				$error = 'f';
+			}
+			if($error == 'f'){
+				header("refresh:5; url=../index.php");
+				die();
+			}
 			addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal);
 		}
-		else if ($_POST['command'] == 'addProdukShipped'){
+		
+		if ($_POST['command'] == 'addProdukShipped'){
+			if (isset($_SESSION['logged'])) {
+				$username = $_SESSION['logged'];
+			}
 			$kode_produk = $_POST['kode-product-shipped']; 
 			$nama_produk = $_POST['nama-product-shipped']; 
 			$harga = $_POST['harga-product-shipped']; 
@@ -55,7 +123,209 @@
 			$maksimalGrosir = $_POST['maksimal-grosir-product-shipped'];
 			$hargaGrosir = $_POST['harga-grosir-product-shipped'];
 			$uploadFoto = $_POST['upload-foto'];
-			addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto);
+			$kategori = '';
+			$email = '';
+			$error = 't';
+			if(strlen($kode_produk) == 0){
+				echo "kode produk kosong";
+				echo"";
+				$error = 'f';
+			}
+			if (strlen($kode_produk) != 8){
+				echo "Kode produk harus di isi dengan tepat 8 karakter";
+				echo"";
+				$error = 'f';
+			}
+			checkProduk($kode_produk, $error);
+			if(strlen($nama_produk) == 0){
+					echo "nama produk kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (strlen($nama_produk) < 1 || strlen($nama_produk) > 100){
+				echo "nama produk tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($harga) == 0){
+					echo "harga kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($harga)){
+				if ($harga > 9999999999 || $harga < 0.01){
+					echo "harga tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "harga tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($subKategori) == 0){
+					echo "Sub kategori kosong";
+					echo"";
+					$error = 'f';
+			}
+			if(strlen($is_asuransi) == 0){
+					echo "asuransi kosong";
+					echo"";
+					$error = 'f';
+			}
+			if(strlen($stok) == 0){
+					echo "input stok kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($stok)){
+				if($stok < 1){
+					echo "stok tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "stok tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($is_baru) == 0){
+					echo "kondisi barang kosong";
+					echo"";
+					$error = 'f';
+			}
+			if(strlen($min_order) == 0){
+					echo "minimal order kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($min_order)){
+				if($min_order < 1){
+					echo "minimal order tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "minimal order tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($min_grosir) == 0){
+					echo "minimal grosir kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($min_grosir)){
+				if($min_grosir < 1){
+					echo "minimal grosir tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "minimal grosir tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($max_grosir) == 0){
+					echo "maksimal grosir kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($max_grosir)){
+				if($max_grosir < 1){
+					echo"maksimal grosir tidak valid";
+					echo"";
+					$error = 'f';
+				}
+				if($min_grosir > $max_grosir){
+					echo "maksimal grosir harus lebih besar dibandingkan minimal grosir";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "maksimal grosir tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($harga_grosir) == 0){
+					echo "harga grosir kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (is_numeric($harga_grosir)){
+				if ($harga_grosir > 9999999999 || $harga_grosir < 0.01){
+					echo "harga grosir tidak valid";
+					echo"";
+					$error = 'f';
+				}
+			}
+			else{
+				echo "harga grosir tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($foto) == 0){
+					echo"nama foto kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (strlen($foto) < 1 || strlen($foto) > 100){
+				echo "nama foto tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if($error == 'f'){
+				header("refresh:5; url=../index.php");
+			}
+			addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto, $username, $kategori, $email);
+		}
+		if ($_POST['command'] == 'addToko'){
+			if (isset($_SESSION['logged'])) {
+				$username = $_SESSION['logged'];
+			}
+			$nama = $_POST['toko-nama']; 
+			$deskripsi = $_POST['toko-deskripsi']; 
+			$slogan = $_POST['toko-slogan']; 
+			$lokasi = $_POST['toko-lokasi'];
+			$email = '';
+			$error = 't';
+			if(strlen($nama) == 0){
+					echo "nama toko kosong";
+					echo"";
+					$error = 'f';
+			}
+			if (strlen($nama) < 1 || strlen($nama) > 100){
+				echo "nama toko tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			checkToko($nama, $error);
+			if (strlen($slogan) > 100){
+				echo "slogan tidak valid";
+				echo"";
+				$error = 'f';
+			}
+			if(strlen($lokasi) == 0){
+				echo "lokasi kosong";
+				echo"";
+				$error = 'f';
+			}
+			if($error == 'f'){
+				header("refresh:5; url=../index.php");
+			}
+			addToko($nama, $deskripsi, $slogan, $lokasi, $username, $email);
+			if(!empty($_POST['toko-jasa-kirim'])) {
+			    foreach($_POST['toko-jasa-kirim'] as $check) {
+			        $jasa_kirim = $check;
+			        addJasaKirimToko($nama, $jasa_kirim);
+			    }
+			}
+			header("Location: ../index.php");
 		}
 	}
 
@@ -95,12 +365,12 @@
 		
 		while ($row = pg_fetch_assoc($query1)) {
 			if ($email === $row['email'] && $password == $row['password']) {
-				if ($row['is_penjual'] == true) {
+				if ($row['is_penjual'] == t) {
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'penjual';
 					header("Location: ../");
 				}
-				else {
+				else{
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'pembeli';
 					header("Location: ../");
@@ -178,32 +448,81 @@
 		}
 	}
 
-	function addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto){
+	function addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto, $username, $kategori, $email){
 		
 		$connectDB = connectDB();
-		$sql = "INSERT INTO tokokeren.PRODUK(kode_produk, nama_produk, harga, deskripsi) VALUES($kode_produk, $nama_produk, $harga, $deskripsi)";
+		$sql = "INSERT INTO tokokeren.PRODUK(kode_produk, nama, harga, deskripsi) VALUES( '$kode_produk', '$nama_produk', '$harga', '$deskripsi')";
 
-		$sql2 = "SELECT kode FROM SUB_KATEGORI WHERE $nama_produk IS EXISTS";
+		$sql2 = "SELECT SK.kode FROM tokokeren.SUB_KATEGORI AS SK WHERE SK.nama = '$subKategori'";
 
-		$sql4 = "INSERT INTO tokokeren.SHIPPED_PRODUK(kode_produk, kategori, nama_toko, is_asuransi, stok, is_baru, min_order, min_grosir, max_grosir, harga_grosir, foto) VALUES($kode_produk, $sql2, $row['email'], $isAsuransi, $stok, $barangBaru, minimalOrder, $minimalGrosir,  $maksimalGrosir, $hargaGrosir, $uploadFoto)";
-		
+		$sql3 = "SELECT T.email_penjual, T.nama FROM tokokeren.TOKO T, tokokeren.PELANGGAN PE NATURAL JOIN tokokeren.PENGGUNA P WHERE PE.email = T.email_penjual AND P.nama = '$username'";
+
 		$query1 = pg_query($connectDB, $sql);
 		$query2 = pg_query($connectDB, $sql2);
+		$query3 = pg_query($connectDB, $sql3);
+
+		while ($row = pg_fetch_assoc($query2)) {
+				$kategori = $row['kode'];
+		}
+
+		while ($row2 = pg_fetch_assoc($query3)) {
+				$email = $row2['email_penjual'];
+		}
+
+		$sql4 = "SELECT T.nama FROM tokokeren.TOKO AS T WHERE T.email_penjual LIKE '$email'";
+
 		$query4 = pg_query($connectDB, $sql4);
 
-		if ($query1 && $query2 && $query4){
+		while ($row3 = pg_fetch_assoc($query4)) {
+				$nama_toko = $row3['nama'];
+		}
+
+		if ($query1 && $query2 && $query3 && $query4){
+			$sql5 = "INSERT INTO tokokeren.SHIPPED_PRODUK(kode_produk, kategori, nama_toko, is_asuransi, stok, is_baru, min_order, min_grosir, max_grosir, harga_grosir, foto) VALUES('$kode_produk', '$kategori', '$nama_toko', '$isAsuransi', '$stok', '$barangBaru', '$minimalOrder', '$minimalGrosir', '$maksimalGrosir', '$hargaGrosir', '$uploadFoto')";
+
+			$query5 = pg_query($connectDB, $sql5);
 			header("Location: ../index.php");
 		}
 		else{
-			die("Error: $query1 or Error: $query2 or Error: $query3 or Error: $query4");
+			die("Error: $query1 or Error: $query2 or Error: $query3");
 		}
 		
 	}
 
+	function addToko($nama, $deskripsi, $slogan, $lokasi, $username, $email){
+		$connectDB = connectDB();
+
+		$sql = "SELECT PE.email FROM tokokeren.PELANGGAN PE NATURAL JOIN tokokeren.PENGGUNA P WHERE P.nama = '$username'";
+
+		$query1 = pg_query($connectDB, $sql);
+
+		while ($row1 = pg_fetch_assoc($query1)) {
+				$email = $row1['email'];
+		}
+
+		$sql2 = "INSERT INTO tokokeren.TOKO(nama, deskripsi, slogan, lokasi, email_penjual) VALUES ('$nama', '$deskripsi', '$slogan', '$lokasi', '$email')";
+
+		$query2 = pg_query($connectDB, $sql2);
+
+		$sql3 = "UPDATE tokokeren.PELANGGAN SET is_penjual = 't' WHERE email = '$email'";
+
+		$query3 = pg_query($connectDB, $sql3);
+
+		$_SESSION['role'] = 'penjual';
+	};
+
+	function addJasaKirimToko($nama, $jasa_kirim){
+		$connectDB = connectDB();
+
+		$sql = "INSERT INTO tokokeren.TOKO_JASA_KIRIM(nama_toko, jasa_kirim) VALUES('$nama', '$jasa_kirim')";
+
+		$query = pg_query($connectDB, $sql);
+	};
+
 	function addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal){
 		$connectDB = connectDB();
-		$sql = "INSERT INTO tokokeren.PRODUK(kode_produk, nama_produk, harga, deskripsi) VALUES($kode_produk, $nama_produk, $harga, $deskripsi)";
-		$sql2 = "INSERT INTO tokokeren.PRODUK_PULSA(kode_produk, nominal) VALUES($kode_produk, $nominal)";
+		$sql = "INSERT INTO tokokeren.PRODUK(kode_produk, nama, harga, deskripsi) VALUES( '$kode_produk', '$nama_produk', '$harga', '$deskripsi')";
+		$sql2 = "INSERT INTO tokokeren.PRODUK_PULSA(kode_produk, nominal) VALUES('$kode_produk', '$nominal')";
 		
 		$query1 = pg_query($connectDB, $sql);
 		$query2 = pg_query($connectDB, $sql2);
@@ -214,5 +533,30 @@
 		else{
 			die("Error: $query1 or $query2");
 		}
+	}
+	function checkProduk($kode_produk, $error){
+			$sqlProduk ="SELECT kode_produk FROM tokokeren.produk";
+			$connectProduk = connectDB();
+			$queryProduk = pg_query($connectProduk, $sqlProduk);
+			while ($row = pg_fetch_assoc($queryProduk)) {
+				if($kode_produk = $row['kode_produk']){
+					echo "kode produk sudah ada";
+					echo "";
+					$error ='f';
+				}
+			}
+	}
+	function checkToko($nama, $error){
+			$sqlToko ="SELECT nama FROM tokokeren.toko";
+			$connectToko = connectDB();
+			$queryToko = pg_query($connectToko, $sqlToko);
+			while ($row = pg_fetch_assoc($queryToko)) {
+				if($nama = $row[$queryToko]){
+					echo "nama toko sudah ada";
+					echo "";
+					$error ='f';
+					die();
+				}
+			}
 	}
 ?>

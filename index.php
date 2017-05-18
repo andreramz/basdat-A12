@@ -385,7 +385,7 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form action="./config/config.php" method="post" onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
+								<form action="./config/config.php" method="post">
 								<div class="input-field">
 									<input id="kode-product-pulsa" type="text" name="kode-product-pulsa" class="validate" required>
 									<label for="kode-product-pulsa">Kode Produk</label>
@@ -407,7 +407,7 @@
 									<label for="nominal-product-pulsa">Nominal</label>
 								</div>
 								<input type="hidden" name="command" value="addProdukPulsa">
-								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+								<button type="submit" class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
@@ -423,7 +423,7 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form onsubmit="Materialize.toast('Pembuatan Toko berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
+								<form action="./config/config.php" method="post">
 									<div class="input-field">
 									    <input id="toko-nama" type="text" name="toko-nama" class="validate" required>
 									    <label for="toko-nama" data-error="wrong" data-success="right">Nama</label>
@@ -441,16 +441,28 @@
 									    <label for="toko-lokasi" data-error="wrong" data-success="right">Lokasi</label>
 									</div>
 									<div class="input-field">
-									    <a class='dropdown-button yellow darken-2 black-text waves-effect waves-light btn' href='#' data-activates='dropdown1'>Jasa Kirim</a>
-									    <ul id='dropdown1' class='dropdown-content'>
-										    <li><a href="#!">one</a></li>
-										    <li><a href="#!">two</a></li>
-										    <li><a href="#!">three</a></li>
-										    <li><a href="#!">view_module</a></li>
-										    <li><a href="#!">cloud</a></li>
-										</ul>
+										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim[]">
+											<option value="" disabled selected>Pilih...</option>
+											<?php
+												$host = "localhost";
+												$dbname = "valianfil";
+												$username = "valianfil";
+												$password = "1234abcd";
+
+												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
+												$sql = "SELECT nama FROM tokokeren.JASA_KIRIM";
+												$sql_res = pg_query($sql);
+												
+												while ($row = pg_fetch_assoc($sql_res)){
+													echo '<option name="option[]" value="'.$row['nama'].'">'.$row['nama'].'</option>';
+												} 
+
+											?>
+									    </select>
+									    <label for="toko-jasa-kirim">Jasa Kirim</label>
 									</div>
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+									<input type="hidden" name="command" value="addToko">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" type="submit" id="submit-button" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
@@ -466,7 +478,7 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form action="#" onsubmit="Materialize.toast('Pembuatan Produk Shipped berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">
+								<form action="./config/config.php" method="post">
 									<div class="input-field">
 										<input id="kode-product-shipped" type="text" name="kode-product-shipped" class="validate" required>
 										<label for="kode-product-shipped">Kode Produk</label>
@@ -484,7 +496,7 @@
 										<label for="deskripsi-product-shipped">Deskripsi</label>
 									</div>
 									<div class="input-field">
-										<select id="subkategori-product-shipped" action="./config/config.php" name="subkategori-product-shipped">
+										<select id="subkategori-product-shipped" name="subkategori-product-shipped">
 											<option value="" disabled selected>Pilih...</option>
 											<?php
 												$host = "localhost";
@@ -497,7 +509,7 @@
 												$sql_res = pg_query($sql);
 												
 												while ($row = pg_fetch_assoc($sql_res)){
-													echo "<option value=".$row['nama'].">".$row['nama']."</option>";
+													echo '<option value="'.$row['nama'].'">'.$row['nama'].'</option>';
 												} 
 
 											?>
@@ -540,13 +552,10 @@
 									</div>
 									<div class="input-field">
 										<p>Foto</p>
-										<div class="btn">
-								        	<span>File</span>
-								        </div>
 								        <input type="file" name="upload-foto">
 									</div>
 									<input type="hidden" name="command" value="addProdukShipped">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" type="submit" id="submit-button" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
