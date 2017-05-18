@@ -549,10 +549,15 @@
 				$(".indicator").css("background-color: black;");
 				$("#category").hide();
 				<?php 
-				$result = lihat_transaksi_shipped($_SESSION['email']);
-				while($row = pg_fetch_assoc($result)) {
-					echo 
-					"$('#daftar-produk-".$row['no_invoice']."').modal();";
+				try {
+					$result = lihat_transaksi_shipped($_SESSION['email']);
+					$rees = "";
+					while($row = pg_fetch_assoc($result)) {
+						$rees .= "$('#daftar-produk-".$row['no_invoice']."').modal();";
+					}
+					echo $rees;
+				} catch (Exception $e) {
+					echo 'console.log('. $e->getMessage() .');';
 				}
 				?>
 

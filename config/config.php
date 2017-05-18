@@ -30,7 +30,7 @@
 			}
 			else {
 				$_SESSION['regStatus'] = 'gagal';
-				header("Location: register.php");
+				header("Location: ../register.php");
 			}
 		}
 
@@ -331,9 +331,9 @@
 
 	function connectDB() {
 		$host = "localhost";
-		$dbname = "postgres";
-		$username = "postgres";
-		$password = "";
+		$dbname = "valianfil";
+		$username = "valianfil";
+		$password = "1234abcd";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
