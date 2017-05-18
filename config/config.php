@@ -1,5 +1,7 @@
 <?php
-	session_start();
+	if (!isset($_SESSION)) {
+		session_start();
+	}
 
 	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		if ($_GET['action'] == 'logout') {
@@ -11,7 +13,6 @@
 			$typed = $_POST['typed'];
 			checkEmail($typed);
 		}
-
 		if ($_POST['command'] == 'login') {
 			$email = $_POST['email'];
 			$password = $_POST['password'];
@@ -22,15 +23,14 @@
 				$email = $_POST['email'];
 				$password = $_POST['password'];
 				$name = $_POST['name'];
-				$datebirth = $_POST['datebirth'];
 				$gender = $_POST['gender'];
 				$phone = $_POST['phone'];
 				$address = $_POST['address'];
-				register($email, $password, $name, $gender, $datebirth, $phone, $address);
+				register($email, $password, $name, $gender, $phone, $address);
 			}
 			else {
 				$_SESSION['regStatus'] = 'gagal';
-				header("Location: ../register.php");
+				header("Location: register.php");
 			}
 		}
 
@@ -331,9 +331,9 @@
 
 	function connectDB() {
 		$host = "localhost";
-		$dbname = "valianfil";
-		$username = "valianfil";
-		$password = "1234abcd";
+		$dbname = "postgres";
+		$username = "postgres";
+		$password = "";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
@@ -368,11 +368,13 @@
 				if ($row['is_penjual'] == t) {
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'penjual';
+					$_SESSION['email'] = $email;
 					header("Location: ../");
 				}
 				else{
 					$_SESSION['logged'] = $row['nama'];
 					$_SESSION['role'] = 'pembeli';
+					$_SESSION['email'] = $email;
 					header("Location: ../");
 				}
 			}
@@ -382,6 +384,7 @@
 			if ($email === $row2['email'] && $password == $row2['password']) {
 				$_SESSION['logged'] = $row2['nama'];
 				$_SESSION['role'] = 'admin';
+				$_SESSION['email'] = $email;
 				header("Location: ../");
 			}
 		}
@@ -416,36 +419,27 @@
 		header("Location: ../");
 	}
 
-	function register($email, $password, $name, $gender, $datebirth, $phone, $address) {
+	function register($email, $password, $name, $gender, $phone, $address) {
 		$connectDB = connectDB();
-		$sql1 = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ('$email', '$password', '$name', '$gender', '$datebirth', '$phone', '$address')";
-		$sql2 = "INSERT INTO tokokeren.PELANGGAN (email, is_penjual, nilai_reputasi, poin) VALUES ('$email', FALSE, NULL, 0)";
-
-		$query1 = pg_query($connectDB, $sql1);
-		$query2 = pg_query($connectDB, $sql2);
-		
-		if ($query1 && $query2) {
-			$_SESSION['regStatus'] = 'success';
-			$_SESSION['logged'] = $name;
-			$_SESSION['role'] = 'pembeli';
-			header("Location: ../index.php");
+		$sql = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ($email, $password, $name, $gender, CURRENT_DATE, $phone, $address)";
+		if (!$sql) {
+			die("Error: $sql");
 		}
-		else {
-			die("Error: $query1 or Error: $query2");
-		}
+		$query = pg_query($connectDB, $sql);
 	}
 
-	function checkEmail($email) {
+	function lihat_transaksi_pulsa($email) {
 		$connectDB = connectDB();
-		$sql = "SELECT email FROM tokokeren.PENGGUNA WHERE email = '$email'";
-		$query = pg_query($connectDB, $sql);
+		$sql = "SELECT L.no_invoice, P.nama, T.tanggal, T.status, T.total_bayar, T.nominal, T.nomor FROM tokokeren.LIST_ITEM AS L, tokokeren.PRODUK AS P, tokokeren.TRANSAKSI_PULSA AS T WHERE T.email_pembeli = '".$email."' AND L.no_invoice = T.no_invoice AND L.kode_produk = P.kode_produk";
 
-		if (pg_num_rows($query) > 0) {
-			echo "ada";
-		}
-		else {
-			echo "kosong";
-		}
+		return pg_query($connectDB, $sql);
+	}
+	
+	function lihat_transaksi_shipped($email) {
+		$connectDB = connectDB();
+		$sql = "SELECT T.no_invoice, T.nama_toko, T.tanggal, T.status, T.total_bayar, T.alamat_kirim, T.biaya_kirim, T.no_resi, T.nama_jasa_kirim FROM tokokeren.TRANSAKSI_SHIPPED AS T WHERE T.email_pembeli = '".$email."'";
+
+		return pg_query($connectDB, $sql);
 	}
 
 	function addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto, $username, $kategori, $email){
