@@ -262,7 +262,7 @@
 										?>
 									</select>
 									<input type="hidden" name="command" value="lihat-produk-toko">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Lihat Produks</button>
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Lihat Produk</button>
 								</form>
 							</div>
 						</div>
