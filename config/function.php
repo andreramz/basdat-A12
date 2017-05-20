@@ -3,7 +3,7 @@
 		$host = "localhost";
 		$dbname = "postgres";
 		$username = "postgres";
-		$password = "";
+		$password = "marjuan2005";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
@@ -29,4 +29,6 @@
 
 		return pg_query($connectDB, $sql);
 	}
+
+	
 ?>

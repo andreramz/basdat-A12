@@ -163,6 +163,7 @@
 								</div>";
 							}
 							?>
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="kembali-transaksi-button">Kembali</button>
 							<div id="modal-review" class="modal">
 								<form id="review-form">
 							  	<div class="modal-content">
@@ -197,7 +198,7 @@
 							<div class="card-panel yellow lighten-3 ">
 								<img class="product" src="src/resources/lamborghini.jpg">
 								<h5>Lamborghini Aventador</h5>
-								<p class="valign-wrapper">300 cc, bensin 60 L, max speed 300 km/jam, keluaran tahun 2009, masih mulus, bisa nego</p>
+								<p class="valign-wrapper">3000 cc, bensin 60 L, max speed 300 km/jam, keluaran tahun 2009, masih mulus, bisa nego</p>
 								<span class="price">Rp 13.500.000</span>
 							</div>
 						</div>
@@ -389,9 +390,9 @@
 											<option  disabled selected value>Pilih...</option>
 											<?php
 												$host = "localhost";
-												$dbname = "valianfil";
-												$username = "valianfil";
-												$password = "1234abcd";
+												$dbname = "postgres";
+												$username = "postgres";
+												$password = "marjuan2005";
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.JASA_KIRIM";
@@ -556,6 +557,7 @@
 				$("#transaksi-pulsa").hide();
 				$("#transaksi-shipped").hide();
 				$("#daftar-produk-1").hide();
+				$("#kembali-transaksi-button").hide();
 				var forms = 1;
 				$("#category-button").click(function() {
 					$("#category").show();
@@ -565,11 +567,20 @@
 					$("#transaksi-pulsa").show();
 					$("#transaksi-pulsa-button").hide();
 					$("#transaksi-shipped-button").hide();
+					$("#kembali-transaksi-button").show();
 				});
 				$("#transaksi-shipped-button").click(function() {
 					$("#transaksi-shipped").show();
 					$("#transaksi-pulsa-button").hide();
 					$("#transaksi-shipped-button").hide();
+					$("#kembali-transaksi-button").show();
+				});
+				$("#kembali-transaksi-button").click(function() {
+					$("#transaksi-pulsa").hide();
+					$("#transaksi-shipped").hide();
+					$("#kembali-transaksi-button").hide();
+					$("#transaksi-pulsa-button").show();
+					$("#transaksi-shipped-button").show();
 				});
 				$("#daftar-produk-1-button").click(function() {
 					$("#daftar-produk-1").show();
