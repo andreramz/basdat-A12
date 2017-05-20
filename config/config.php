@@ -327,6 +327,18 @@
 			}
 			header("Location: ../index.php");
 		}
+		if ($_POST['command'] == 'beli-produk-pulsa'){
+			if (isset($_SESSION['logged'])) {
+					$username = $_SESSION['email'];
+			}
+			$kode = $_POST['kode-produk-pulsa'];
+			$nomor = $_POST['beli-nomor'];
+			$harga = $_POST['harga-produk-pulsa'];
+			$nominal = $_POST['nominal-produk-pulsa'];
+		}
+		$no_invoice = generateRandomString();
+		beliPulsa($username, $nomor, $kode, $nominal, $harga, $no_invoice);
+		header("Location: ../index.php");
 	}
 
 	function connectDB() {
@@ -552,5 +564,35 @@
 					die();
 				}
 			}
+	}
+
+	function generateRandomString($length = 10) {
+	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    return $randomString;
+	}
+
+	function beliPulsa($username, $nomor, $kode, $nominal, $harga, $no_invoice)
+	{
+
+		$connectDB = connectDB();
+
+		$date = date("Y/m/d");
+		$timestamp = date("Y/m/d H:i:s");
+
+		$sql = "INSERT INTO tokokeren.TRANSAKSI_PULSA (no_invoice, tanggal, waktu_bayar, status, total_bayar, email_pembeli, nominal, nomor, kode_produk) VALUES ('$no_invoice', CURRENT_DATE, '$timestamp', '2', '$harga', '$username', '$nominal', '$nomor', '$kode')";
+
+		$query = pg_query($connectDB, $sql);
+
+		if ($query) {
+			header("Location: ../index.php");
+		}
+		else{
+			die("Error: $query");
+		}
 	}
 ?>

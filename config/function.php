@@ -11,7 +11,7 @@
 
 	function lihat_transaksi_pulsa($email) {
 		$connectDB = connectDB();
-		$sql = "SELECT L.no_invoice, P.nama, T.tanggal, T.status, T.total_bayar, T.nominal, T.nomor FROM tokokeren.LIST_ITEM AS L, tokokeren.PRODUK AS P, tokokeren.TRANSAKSI_PULSA AS T WHERE T.email_pembeli = '".$email."' AND L.no_invoice = T.no_invoice AND L.kode_produk = P.kode_produk";
+		$sql = "SELECT T.no_invoice, P.nama, T.tanggal, T.status, T.total_bayar, T.nominal, T.nomor FROM tokokeren.PRODUK AS P, tokokeren.TRANSAKSI_PULSA AS T WHERE T.email_pembeli = '".$email."' AND T.kode_produk = P.kode_produk";
 
 		return pg_query($connectDB, $sql);
 	}
@@ -30,5 +30,26 @@
 		return pg_query($connectDB, $sql);
 	}
 
-	
+	function lihat_produk_pulsa() {
+		$connectDB = connectDB();
+		$sql = "SELECT P.kode_produk, P.nama, P.harga, P.deskripsi, PP.nominal FROM tokokeren.PRODUK AS P, tokokeren.PRODUK_PULSA AS PP WHERE P.kode_produk = PP.kode_produk";
+
+		return pg_query($connectDB, $sql);
+	}
+
+	function lihat_toko()
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT T.nama FROM tokokeren.TOKO AS T";
+
+		return pg_query($connectDB, $sql);
+	}
+
+	function lihat_shipped_toko($sub_kategori)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT SP.kode_produk, P.nama, P.harga, P.deskripsi, SP.is_asuransi, SP.stok, SP.is_baru, SP.harga_grosir FROM tokokeren.SHIPPED_PRODUK AS SP, tokokeren.PRODUK AS P WHERE SP.kode_produk = P.kode_produk AND SP.kategori = '".$sub_kategori."'";
+
+		return pg_query($connectDB, $sql);
+	}
 ?>

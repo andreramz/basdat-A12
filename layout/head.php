@@ -3,3 +3,4 @@
 <link rel="stylesheet" type="text/css" href="materialize/css/materialize.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="src/css/style.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

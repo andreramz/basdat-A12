@@ -15,7 +15,7 @@
 					<div class="col s12 m12 l12">
 						<div class="nav-content">
 						    <ul class="tabs tabs-transparent">
-							    <li class="tab"><a class="active black-text" href="#test1">Produk</a></li>
+							    <li class="tab"><a class="active black-text" href="#lihat-produk">Produk</a></li>
 							    <li class="tab"><a class="black-text" href="#test2">Kategori</a></li>
 							    <li class="tab"><a class="black-text" href="#test3">Toko</a></li>
 							    <li class="tab"><a class="black-text" href="#test4">Ranks</a></li>
@@ -52,7 +52,6 @@
 			<div id="see-transaksi" class="col s12">
 				<div class="container">
 					<div class="row">
-						<div class="col m2 s12 block"></div>
 						<div class="col m12 s12 block">
 							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="transaksi-pulsa-button">Produk Pulsa</button>
 							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="transaksi-shipped-button">Produk Barang</button>
@@ -191,31 +190,80 @@
 				</div>
 			</div>
 			<?php } ?>
-			<div id="test1" class="col s12">
+			<div id="lihat-produk" class="col s12">
 				<div class="container">
 					<div class="row">
-						<div class="col m4 s12 block">
-							<div class="card-panel yellow lighten-3 ">
-								<img class="product" src="src/resources/lamborghini.jpg">
-								<h5>Lamborghini Aventador</h5>
-								<p class="valign-wrapper">3000 cc, bensin 60 L, max speed 300 km/jam, keluaran tahun 2009, masih mulus, bisa nego</p>
-								<span class="price">Rp 13.500.000</span>
+						<div class="col m12 s12 block">
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="lihat-pulsa-button">Produk Pulsa</button>
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="lihat-shipped-button">Produk Barang</button>
+							<div id="lihat-pulsa" class="card-panel yellow lighten-3 black-text">
+								<table class="striped">
+									<thead>
+										<tr>
+											<th>Kode Produk</th>
+											<th>Nama Produk</th>
+											<th>Harga</th>
+											<th>Deskripsi</th>
+											<th>Nominal</th>
+											<th>Beli</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$result = lihat_produk_pulsa();
+										while($row = pg_fetch_assoc($result)) {
+											echo 
+											"<tr>
+												<td>".$row['kode_produk']."</td>
+												<td>".$row['nama']."</td>
+												<td>".$row['harga']."</td>
+												<td>".$row['deskripsi']."</td>
+												<td>".$row['nominal']."</td>
+												<td><a class='waves-effect waves-light btn' href='#beli-produk-".$row['kode_produk']."'>BELI</a></td>
+											</tr>";
+										}
+										$result = lihat_produk_pulsa();
+										while($row = pg_fetch_assoc($result)) {
+											echo 
+											'<div id="beli-produk-'.$row['kode_produk'].'" class="modal">
+												<p>Kode Produk: '.$row['kode_produk'].'</p>
+												<form action="./config/config.php" method="post">
+													<div class="row">
+												        <div class="col s12">
+												          Nomor  HP / Token Listrik:
+												          <div class="input-field inline">
+												            <input id="beli-nomor" name="beli-nomor" type="number" class="validate" required>
+												            <label for="beli-nomor" data-error="wrong" data-success="right">Nomor</label>
+												          </div>
+												        </div>
+												    </div>
+												    <input type="hidden" name="kode-produk-pulsa" value="'.$row['kode_produk'].'">
+												    <input type="hidden" name="nominal-produk-pulsa" value="'.$row['nominal'].'">
+												    <input type="hidden" name="harga-produk-pulsa" value="'.$row['harga'].'">
+												    <input type="hidden" name="command" value="beli-produk-pulsa">
+				    								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-beli" style="margin-top: 10px;">Submit</button>
+												</form>
+											</div>';
+										}
+										?>
+									</tbody>
+								</table>
 							</div>
-						</div>
-						<div class="col m4 s12 block">
-							<div class="card-panel yellow lighten-3">
-								<img class="product" src="src/resources/topeng-tobi.jpg">
-								<h5>Tobi Mask Fiberglass</h5>
-								<p class="valign-wrapper">topeng dijual murah. minat pc. jangan kelamaan, ntar kehabisan. kalo kehabisan, ditanggung sendiri</p>
-								<span class="price">Rp 100.000</span>
-							</div>
-						</div>
-						<div class="col m4 s12 block">
-							<div class="card-panel yellow lighten-3 ">
-								<img class="product" src="src/resources/mugiwara.jpg">
-								<h5>Topi Jerami One Piece</h5>
-								<p class="valign-wrapper">dijamin seger, enak dipandang</p>
-								<span class="price">Rp 25.000</span>
+							<div id='lihat-shipped'>
+								<form action="./config/config.php" method="post">
+									<select id="pilih-toko"  name="toko-shipped">
+										<option value="" disabled selected>Pilih Toko</option>
+										<?php
+											$result = lihat_toko();
+											while($row = pg_fetch_assoc($result)) {
+												echo 
+									    		"<option name='pilih-toko' value='".$row['nama']."'><a href='".$row['nama']."'>".$row['nama']."</a></option>";
+									    	}
+										?>
+									</select>
+									<input type="hidden" name="command" value="lihat-produk-toko">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Lihat Produks</button>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -329,7 +377,7 @@
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
 								<form action="./config/config.php" method="post">
-								<!--<form onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">-->
+								<!--<form onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'lihat-produk'); return false;">-->
 								<div class="input-field">
 									<input id="kode-product-pulsa" type="text" name="kode-product-pulsa" class="validate" required>
 									<label for="kode-product-pulsa">Kode Produk</label>
@@ -445,9 +493,9 @@
 											<option value="" disabled selected>Pilih...</option>
 											<?php
 												$host = "localhost";
-												$dbname = "valianfil";
-												$username = "valianfil";
-												$password = "1234abcd";
+												$dbname = "postgres";
+												$username = "postgres";
+												$password = "marjuan2005";
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.SUB_KATEGORI";
@@ -457,14 +505,6 @@
 													echo '<option value="'.$row['nama'].'">'.$row['nama'].'</option>';
 												} 
 											?>
-										<!--<a class='dropdown-button yellow darken-2 black-text waves-effect waves-light btn' href='#' data-activates='dropdown1'>Sub Kategori</a>
-										<ul id='dropdown1' class='dropdown-content'>
-											<li><a href="#!">one</a></li>
-											<li><a href="#!">two</a></li>
-											<li><a href="#!">three</a></li>
-											<li><a href="#!">view_module</a></li>
-											<li><a href="#!">cloud</a></li>
-										</ul>-->
 									</div>
 									<div class="input-field">
 										<p>Barang Asuransi</p>
@@ -566,6 +606,8 @@
 				$("#transaksi-shipped").hide();
 				$("#daftar-produk-1").hide();
 				$("#kembali-transaksi-button").hide();
+				$("#lihat-pulsa").hide();
+				$("#lihat-shipped").hide();
 				var forms = 1;
 				$("#category-button").click(function() {
 					$("#category").show();
@@ -589,6 +631,14 @@
 					$("#kembali-transaksi-button").hide();
 					$("#transaksi-pulsa-button").show();
 					$("#transaksi-shipped-button").show();
+				});
+				$("#lihat-pulsa-button").click(function() {
+					$("#lihat-pulsa").show();
+					$("#lihat-shipped").hide();
+				});
+				$("#lihat-shipped-button").click(function() {
+					$("#lihat-pulsa").hide();
+					$("#lihat-shipped").show();
 				});
 				$("#daftar-produk-1-button").click(function() {
 					$("#daftar-produk-1").show();
@@ -673,7 +723,7 @@
 			           		var res = JSON.parse(data);
 			           		if (res.status == 'success') {
 			           			Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
+								$('ul.tabs').tabs('select_tab', 'lihat-produk');
 			           		}
 			           		else if (res.status == 'failed') {
 			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
@@ -694,7 +744,7 @@
 			           		var res = JSON.parse(data);
 			           		if (res.status == 'success') {
 			           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
+								$('ul.tabs').tabs('select_tab', 'lihat-produk');
 			           		}
 			           		else if (res.status == 'failed') {
 			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
@@ -719,7 +769,7 @@
 			           		var res = JSON.parse(data);
 			           		if (res.status == 'success') {
 			           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
+								$('ul.tabs').tabs('select_tab', 'lihat-produk');
 			           		}
 			           		else if (res.status == 'failed') {
 			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
