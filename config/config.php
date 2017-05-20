@@ -577,6 +577,18 @@
 			}
 	}
 
+	function checkCategory($category) {
+		$connectDB = connectDB();
+		$sql = "SELECT kode FROM tokokeren.KATEGORI_UTAMA WHERE kode = '$category'";
+		$query = pg_query($connectDB, $sql);
+		if(pg_num_rows($query) > 0) {
+			echo "salah";
+		}
+		else {
+			echo "benar";
+		}
+	}
+
 	function checkSub($sub) {
 		$connectDB = connectDB();
 		$sql = "SELECT kode FROM tokokeren.SUB_KATEGORI WHERE kode = '$sub'";
