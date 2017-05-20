@@ -347,7 +347,7 @@
 									<label for="deskripsi-product-pulsa">Deskripsi</label>
 								</div>
 								<div class="input-field">
-									<input id="nominal-product-pulsa" pattern="[0-2147483647]" type="text" name="nominal-product-pulsa" class="validate" required>
+									<input id="nominal-product-pulsa" pattern=".{1,10}" type="text" name="nominal-product-pulsa" class="validate" required>
 									<label for="nominal-product-pulsa">Nominal</label>
 								</div>
 								<input type="hidden" name="command" value="addProdukPulsa">
@@ -371,35 +371,35 @@
 								<form action="./config/config.php" method="post">
 									<div class="input-field">
 									    <input id="toko-nama" type="text"  pattern=".{1,100}" name="toko-nama" class="validate" required>
-									    <label for="toko-nama" data-error="wrong" data-success="right">Nama</label>
+									    <label for="toko-nama">Nama</label>
 									</div>
 									<div class="input-field">
 									    <input id="toko-deskripsi" type="text" name="toko-deskripsi">
-									    <label for="toko-deskripsi" data-error="wrong" data-success="right">Deskripsi</label>
+									    <label for="toko-deskripsi">Deskripsi</label>
 									</div>
 									<div class="input-field">
 									    <input id="toko-slogan" type="text" pattern=".{0,100}" name="toko-slogan" class="validate" required>
-									    <label for="toko-slogan" data-error="wrong" data-success="right">Slogan</label>
+									    <label for="toko-slogan">Slogan</label>
 									</div>
 									<div class="input-field">
 									    <input id="toko-lokasi" type="text" pattern=".{1,}" name="toko-lokasi" class="validate" required>
-									    <label for="toko-lokasi" data-error="wrong" data-success="right">Lokasi</label>
+									    <label for="toko-lokasi">Lokasi</label>
 									</div>
 									<div class="input-field">
-										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim" required>
-											<option  disabled selected value>Pilih...</option>
+										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim">
+											<option  disabled selected value="">Pilih...</option>
 											<?php
 												$host = "localhost";
-												$dbname = "postgres";
-												$username = "postgres";
-												$password = "marjuan2005";
+												$dbname = "valianfil";
+												$username = "valianfil";
+												$password = "1234abcd";
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.JASA_KIRIM";
 												$sql_res = pg_query($sql);
 												
 												while ($row = pg_fetch_assoc($sql_res)){
-													echo '<option name="option[]" value="'.$row['nama'].'">'.$row['nama'].'</option>';
+													echo '<option value="'.$row['nama'].'">'.$row['nama'].'</option>';
 												} 
 
 											?>
@@ -468,7 +468,7 @@
 					       				<label for="barang-asuransi-tidak">Tidak</label>
 									</div>
 									<div class="input-field">
-										<input id="stok-product-shipped" type="text" pattern="[0-2147483647]" name="stok-product-shipped" class="validate" required>
+										<input id="stok-product-shipped" type="text" pattern=".{0,10}" name="stok-product-shipped" class="validate" required>
 										<label for="stok-product-shipped">Stok</label>
 									</div>
 									<div class="input-field">
@@ -479,15 +479,15 @@
 					       				<label for="barang-baru-tidak">Tidak</label>
 									</div>
 									<div class="input-field">
-										<input id="minimal-order-product-shipped" type="text" pattern="[0-2147483647]" name="minimal-order-product-shipped" class="validate" required>
+										<input id="minimal-order-product-shipped" type="text" pattern=".{0,10}" name="minimal-order-product-shipped" class="validate" required>
 										<label for="minimal-order-product-shipped">Minimal Order</label>
 									</div>
 									<div class="input-field">
-										<input id="minimal-grosir-product-shipped" type="text" pattern="[0-2147483647]" name="minimal-grosir-product-shipped" class="validate" required>
+										<input id="minimal-grosir-product-shipped" type="text" pattern=".{0,10}" name="minimal-grosir-product-shipped" class="validate" required>
 										<label for="minimal-grosir-product-shipped">Minimal Grosir</label>
 									</div>
 									<div class="input-field">
-										<input id="maksimal-grosir-product-shipped" type="text" pattern="[0-2147483647]" name="maksimal-grosir-product-shipped" class="validate" required>
+										<input id="maksimal-grosir-product-shipped" type="text" pattern=".{0,10}" name="maksimal-grosir-product-shipped" class="validate" required>
 										<label for="maksimal-grosir-product-shipped">Maksimal Grosir</label>
 									</div>
 									<div class="input-field">
@@ -725,10 +725,6 @@
 					$('#promo-periode-akhir').pickadate('picker').set('min', new Date($('#promo-periode-awal').val()));
 				});
 				$('#create-product-shipped').ready(function(){
-					$("select").material_select();
-					$("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
-				});
-				$('#create-toko').ready(function(){
 					$("select").material_select();
 					$("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
 				});
