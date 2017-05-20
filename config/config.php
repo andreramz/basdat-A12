@@ -44,6 +44,7 @@
 			$deskripsi = $_POST['deskripsi-product-pulsa'];  
 			$nominal = $_POST['nominal-product-pulsa'];
 			$error = 't';
+			/*
 			if(strlen($kode_produk) == 0){
 				echo "kode produk kosong";
 				echo"";
@@ -103,6 +104,7 @@
 				header("refresh:5; url=../index.php");
 				die();
 			}
+			*/
 			addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal);
 		}
 		
@@ -126,6 +128,7 @@
 			$kategori = '';
 			$email = '';
 			$error = 't';
+			/*
 			if(strlen($kode_produk) == 0){
 				echo "kode produk kosong";
 				echo"";
@@ -282,6 +285,7 @@
 			if($error == 'f'){
 				header("refresh:5; url=../index.php");
 			}
+			*/
 			addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto, $username, $kategori, $email);
 		}
 		if ($_POST['command'] == 'addToko'){
@@ -294,6 +298,7 @@
 			$lokasi = $_POST['toko-lokasi'];
 			$email = '';
 			$error = 't';
+			/*
 			if(strlen($nama) == 0){
 					echo "nama toko kosong";
 					echo"";
@@ -318,6 +323,7 @@
 			if($error == 'f'){
 				header("refresh:5; url=../index.php");
 			}
+			*/
 			addToko($nama, $deskripsi, $slogan, $lokasi, $username, $email);
 			if(!empty($_POST['toko-jasa-kirim'])) {
 			    foreach($_POST['toko-jasa-kirim'] as $check) {

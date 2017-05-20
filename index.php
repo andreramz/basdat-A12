@@ -330,15 +330,15 @@
 								<form action="./config/config.php" method="post">
 								<!--<form onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'test1'); return false;">-->
 								<div class="input-field">
-									<input id="kode-product-pulsa" type="text" name="kode-product-pulsa" class="validate" required>
+									<input id="kode-product-pulsa" pattern=".{8,8}" type="text" name="kode-product-pulsa" class="validate" required>
 									<label for="kode-product-pulsa">Kode Produk</label>
 								</div>
 								<div class="input-field">
-									<input id="nama-product-pulsa" type="text" name="nama-product-pulsa" class="validate" required>
+									<input id="nama-product-pulsa" pattern=".{1,100}" type="text" name="nama-product-pulsa" class="validate" required>
 									<label for="nama-product-pulsa">Nama Produk</label>
 								</div>
 								<div class="input-field">
-									<input id="harga-product-pulsa" type="text" name="harga-product-pulsa" class="validate" required>
+									<input id="harga-product-pulsa" pattern="^\d{1,8}(\.\d{0,2})?$" type="text" name="harga-product-pulsa" class="validate" required>
 									<label for="harga-product-pulsa">Harga</label>
 								</div>
 								<div class="input-field">
@@ -346,7 +346,7 @@
 									<label for="deskripsi-product-pulsa">Deskripsi</label>
 								</div>
 								<div class="input-field">
-									<input id="nominal-product-pulsa" type="text" name="nominal-product-pulsa" class="validate" required>
+									<input id="nominal-product-pulsa" pattern="[0-2147483647]" type="text" name="nominal-product-pulsa" class="validate" required>
 									<label for="nominal-product-pulsa">Nominal</label>
 								</div>
 								<input type="hidden" name="command" value="addProdukPulsa">
@@ -369,24 +369,24 @@
 							<div class="card-panel yellow lighten-3 black-text">
 								<form action="./config/config.php" method="post">
 									<div class="input-field">
-									    <input id="toko-nama" type="text" name="toko-nama" class="validate" required>
+									    <input id="toko-nama" type="text"  pattern=".{1,100}" name="toko-nama" class="validate" required>
 									    <label for="toko-nama" data-error="wrong" data-success="right">Nama</label>
 									</div>
 									<div class="input-field">
-									    <input id="toko-deskripsi" type="text" name="toko-deskripsi" class="validate" required>
+									    <input id="toko-deskripsi" type="text" name="toko-deskripsi">
 									    <label for="toko-deskripsi" data-error="wrong" data-success="right">Deskripsi</label>
 									</div>
 									<div class="input-field">
-									    <input id="toko-slogan" type="text" name="toko-slogan" class="validate" required>
+									    <input id="toko-slogan" type="text" pattern=".{0,100}" name="toko-slogan" class="validate" required>
 									    <label for="toko-slogan" data-error="wrong" data-success="right">Slogan</label>
 									</div>
 									<div class="input-field">
-									    <input id="toko-lokasi" type="text" name="toko-lokasi" class="validate" required>
+									    <input id="toko-lokasi" type="text" pattern=".{1,}" name="toko-lokasi" class="validate" required>
 									    <label for="toko-lokasi" data-error="wrong" data-success="right">Lokasi</label>
 									</div>
 									<div class="input-field">
-										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim[]">
-											<option value="" disabled selected>Pilih...</option>
+										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim" required>
+											<option  disabled selected value>Pilih...</option>
 											<?php
 												$host = "localhost";
 												$dbname = "valianfil";
@@ -424,24 +424,24 @@
 							<div class="card-panel yellow lighten-3 black-text">
 								<form action="./config/config.php" method="post">
 									<div class="input-field">
-										<input id="kode-product-shipped" type="text" name="kode-product-shipped" class="validate" required>
+										<input id="kode-product-shipped" pattern=".{8,8}" type="text" name="kode-product-shipped" class="validate" required>
 										<label for="kode-product-shipped">Kode Produk</label>
 									</div>
 									<div class="input-field">
-										<input id="nama-product-shipped" type="text" name="nama-product-shipped" class="validate" required>
+										<input id="nama-product-shipped" pattern=".{1,100}" type="text" name="nama-product-shipped" class="validate" required>
 										<label for="nama-product-shipped">Nama Produk</label>
 									</div>
 									<div class="input-field">
-										<input id="harga-product-shipped" type="date" name="harga-product-shipped" class="datepicker validate" required>
+										<input id="harga-product-shipped" pattern="^\d{1,8}(\.\d{0,2})?$" type="text" name="harga-product-shipped" class="validate" required>
 										<label for="harga-product-shipped">Harga</label>
 									</div>
 									<div class="input-field">
-										<input id="deskripsi-product-shipped" type="text" name="deskripsi-product-shipped" class="validate" required>
+										<input id="deskripsi-product-shipped" type="text" name="deskripsi-product-shipped">
 										<label for="deskripsi-product-shipped">Deskripsi</label>
 									</div>
 									<div class="input-field">
-										<select id="subkategori-product-shipped" name="subkategori-product-shipped">
-											<option value="" disabled selected>Pilih...</option>
+										<select id="subkategori-product-shipped" name="subkategori-product-shipped" required>
+											<option disabled selected value="">Pilih...</option>
 											<?php
 												$host = "localhost";
 												$dbname = "valianfil";
@@ -453,64 +453,52 @@
 												$sql_res = pg_query($sql);
 												
 												while ($row = pg_fetch_assoc($sql_res)){
-													echo '<option value="'.$row['nama'].'">'.$row['nama'].'</option>';
+													echo "<option value=".$row['nama'].">".$row['nama']."</option>";
 												} 
 											?>
-										<!--<a class='dropdown-button yellow darken-2 black-text waves-effect waves-light btn' href='#' data-activates='dropdown1'>Sub Kategori</a>
-										<ul id='dropdown1' class='dropdown-content'>
-											<li><a href="#!">one</a></li>
-											<li><a href="#!">two</a></li>
-											<li><a href="#!">three</a></li>
-											<li><a href="#!">view_module</a></li>
-											<li><a href="#!">cloud</a></li>
-										</ul>-->
+									    </select>
+									    <label for="subkategori-product-shipped">Sub Kategori</label>
 									</div>
 									<div class="input-field">
 										<p>Barang Asuransi</p>
-										<input name="barang-asuransi" type="radio" id="test3" />
-										<label for="test3">Ya</label>
-										<input name="barang-asuransi" type="radio" id="test4" />
-										<label for="test4">Tidak</label>
+										<input type="radio" name="barang-asuransi" value="true" id="barang-asuransi-ya" required/>
+					       				<label for="barang-asuransi-ya">Ya</label>
+					       				<input type="radio" name="barang-asuransi" value="false" id="barang-asuransi-tidak"/>
+					       				<label for="barang-asuransi-tidak">Tidak</label>
 									</div>
 									<div class="input-field">
-										<input id="stok-product-shipped" type="text" name="stok-product-shipped" class="validate" required>
+										<input id="stok-product-shipped" type="text" pattern="[0-2147483647]" name="stok-product-shipped" class="validate" required>
 										<label for="stok-product-shipped">Stok</label>
 									</div>
 									<div class="input-field">
 										<p>Barang Baru</p>
-										<input name="barang-baru" type="radio" id="test5" />
-										<label for="test5">Ya</label>
-										<input name="barang-baru" type="radio" id="test6" />
-										<label for="test6">Tidak</label>
+										<input name="barang-baru" type="radio" value="true" id="barang-baru-ya" required/>
+					       				<label for="barang-baru-ya">Ya</label>
+					       				<input name="barang-baru" type="radio" value="false" id="barang-baru-tidak"/>
+					       				<label for="barang-baru-tidak">Tidak</label>
 									</div>
 									<div class="input-field">
-										<input id="minimal-order-product-shipped" type="text" name="minimal-order-product-shipped" class="validate" required>
+										<input id="minimal-order-product-shipped" type="text" pattern="[0-2147483647]" name="minimal-order-product-shipped" class="validate" required>
 										<label for="minimal-order-product-shipped">Minimal Order</label>
 									</div>
 									<div class="input-field">
-										<input id="minimal-grosir-product-shipped" type="text" name="minimal-grosir-product-shipped" class="validate" required>
+										<input id="minimal-grosir-product-shipped" type="text" pattern="[0-2147483647]" name="minimal-grosir-product-shipped" class="validate" required>
 										<label for="minimal-grosir-product-shipped">Minimal Grosir</label>
 									</div>
 									<div class="input-field">
-										<input id="maksimal-grosir-product-shipped" type="text" name="maksimal-grosir-product-shipped" class="validate" required>
+										<input id="maksimal-grosir-product-shipped" type="text" pattern="[0-2147483647]" name="maksimal-grosir-product-shipped" class="validate" required>
 										<label for="maksimal-grosir-product-shipped">Maksimal Grosir</label>
 									</div>
 									<div class="input-field">
-										<input id="harga-grosir-product-shipped" type="text" name="harga-grosir-product-shipped" class="validate" required>
+										<input id="harga-grosir-product-shipped" type="text" pattern="^\d{1,8}(\.\d{0,2})?$" name="harga-grosir-product-shipped" class="validate" required>
 										<label for="harga-grosir-product-shipped">Harga Grosir</label>
 									</div>
 									<div class="input-field">
 										<p>Foto</p>
-								        <input type="file" name="upload-foto">
+								        <input type="file" name="upload-foto" required>
 									</div>
 									<input type="hidden" name="command" value="addProdukShipped">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" type="submit" id="submit-button" style="margin-top: 10px;">Submit</button>
-										<!--<div class="btn">
-								        	<span>File</span>
-								        </div>
-								        <input type="file">
-									</div>
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>-->
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
@@ -548,7 +536,9 @@
 				$(".button-collapse").sideNav();
 				$(".indicator").css("background-color: black;");
 				$("#category").hide();
+				
 				<?php 
+				/*
 				try {
 					$result = lihat_transaksi_shipped($_SESSION['email']);
 					$rees = "";
@@ -559,7 +549,9 @@
 				} catch (Exception $e) {
 					echo 'console.log('. $e->getMessage() .');';
 				}
+				*/
 				?>
+				
 
 				$("#transaksi-pulsa").hide();
 				$("#transaksi-shipped").hide();
@@ -720,6 +712,14 @@
 				});
 				$('#promo-periode-awal').change(function() {
 					$('#promo-periode-akhir').pickadate('picker').set('min', new Date($('#promo-periode-awal').val()));
+				});
+				$('#create-product-shipped').ready(function(){
+					$("select").material_select();
+					$("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
+				});
+				$('#create-toko').ready(function(){
+					$("select").material_select();
+					$("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
 				});
 			});
 		</script>
