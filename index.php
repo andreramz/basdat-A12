@@ -284,6 +284,8 @@
 						<div class="col m8 s12 block">
 						<?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'admin') { ?>
 							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="category-button">Create Category</button>
+							<span id="alert-category1" class="green-text"></span>
+							<span id="alert-category2" class="red-text"></span>
 							<div id="category" class="card-panel yellow lighten-3 black-text">
 								<div class="input-field">
 									<input id="category-code" type="text" name="category-code" class="validate">
@@ -294,7 +296,56 @@
 									<input id="category-name" type="text" name="category-name" class="validate">
 									<label for="category-name">Nama Kategori</label>
 								</div>
-								<div id="category-forms"></div>
+								<div id="category-forms">
+									<div id="sub-category-1" style="display: none;">
+										<h5>Subkategori 1</h5>
+										<div class="input-field">
+											<input type="text" id="sub1" class="validate subcode">
+											<label for="sub1">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-1"></span>
+										<div class="input-field">
+											<input type="text" id="subname1" class="validate">
+											<label for="subname1">Nama Subkategori</label>
+										</div>
+									</div>
+									<div id="sub-category-2" style="display: none;">
+										<h5>Subkategori 2</h5>
+										<div class="input-field">
+											<input type="text" id="sub2" class="validate subcode">
+											<label for="sub2">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-2"></span>
+										<div class="input-field">
+											<input type="text" id="subname2" class="validate">
+											<label for="subname2">Nama Subkategori</label>
+										</div>
+									</div>
+									<div id="sub-category-3" style="display: none;">
+										<h5>Subkategori 3</h5>
+										<div class="input-field">
+											<input type="text" id="sub3" class="validate subcode">
+											<label for="sub3">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-3"></span>
+										<div class="input-field">
+											<input type="text" id="subname3" class="validate">
+											<label for="subname3">Nama Subkategori</label>
+										</div>
+									</div>
+									<div id="sub-category-4" style="display: none;">
+										<h5>Subkategori 4</h5>
+										<div class="input-field">
+											<input type="text" id="sub4" class="validate subcode">
+											<label for="sub4">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-4"></span>
+										<div class="input-field">
+											<input type="text" id="subname4" class="validate">
+											<label for="subname4">Nama Subkategori</label>
+										</div>
+									</div>
+								</div>
 								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="subcategory-button" style="margin-top: 10px;">Create Sub-category</button>
 								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 							</div>
@@ -580,7 +631,7 @@
 			$("#transaksi-pulsa").hide();
 			$("#transaksi-shipped").hide();
 			$("#daftar-produk-1").hide();
-			var forms = 1;
+			var forms = 0;
 			$("#category-button").click(function() {
 				$("#category").show();
 				$("#category-button").hide();
@@ -599,8 +650,14 @@
 				$("#daftar-produk-1").show();
 			});
 			$("#subcategory-button").click(function() {
-				$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate sub-category'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
 				forms++;
+				if (forms < 4) {
+					var subs = "#sub-category-"+forms;
+					$(subs).show();
+				}
+				if (forms >= 4) {
+					$("#subcategory-button").hide();
+				}
 			});
 			$('.datepicker').pickadate({
 				selectMonths: true, // Creates a dropdown to control month
@@ -620,8 +677,164 @@
 						}
 					});
 				});
+				
+				$("#sub1").on("input propertychange", function() {
+					var subcode1 = $("#sub1").val();
+					if (subcode1 == "") {
+						$("#sub-alert-1").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode1}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-1").html("");
+						}
+						else {
+							$("#sub-alert-1").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}
+				});
+
+				$("#sub2").on("input propertychange", function() {
+					var subcode2 = $("#sub2").val();
+					if (subcode2 == "") {
+						$("#sub-alert-2").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode2}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-2").html("");
+						}
+						else {
+							$("#sub-alert-2").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}
+
+					
+				});
+
+				$("#sub3").on("input propertychange", function() {
+					var subcode3 = $("#sub3").val();
+					if (subcode3 == "") {
+						$("#sub-alert-3").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode3}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-3").html("");
+						}
+						else {
+							$("#sub-alert-3").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}			
+				});
+
+				$("#sub4").on("input propertychange", function() {
+					var subcode4 = $("#sub4").val();
+					if (subcode4 == "") {
+						$("#sub-alert-4").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode4}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-4").html("");
+						}
+						else {
+							$("#sub-alert-4").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}
+				});
+
+				$("#submit-button").on("click", function() {
+					if (forms == 1) {
+						$.post("config/config.php", {
+							submit: "category1",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+					else if (forms == 2) {
+						$.post("config/config.php", {
+							submit: "category2",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val(),
+							subcat2: $("#sub2").val(),
+							subcatname2: $("#subname2").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+					else if (forms == 3) {
+						$.post("config/config.php", {
+							submit: "category3",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val(),
+							subcat2: $("#sub2").val(),
+							subcatname2: $("#subname2").val(),
+							subcat3: $("#sub3").val(),
+							subcatname3: $("#subname3").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+					else if (forms == 4) {
+						$.post("config/config.php", {
+							submit: "category4",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val(),
+							subcat2: $("#sub2").val(),
+							subcatname2: $("#subname2").val(),
+							subcat3: $("#sub3").val(),
+							subcatname3: $("#subname3").val(),
+							subcat3: $("#sub4").val(),
+							subcatname3: $("#subname4").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+				});
 			});
 		</script>
-
 	</body>
 </html>
