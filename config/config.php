@@ -11,28 +11,28 @@
 	}
 	else {
 		if (isset($_POST['type']) && $_POST['type'] == 'checkEmail') {
-			$typed = $_POST['typed'];
+			$typed = $_POST['type'];
 			checkEmail($typed);
 		}
-		else if ($_POST['type'] == 'category') {
-			$category = $_POST['typed'];
+		else if (isset($_POST['type']) && $_POST['type'] == 'category') {
+			$category = $_POST['type'];
 			checkCategory($category);
 		}
-		else if ($_POST['type'] == 'subcat') {
-			$sub = $_POST['typed'];
+		else if (isset($_POST['type']) && $_POST['type'] == 'subcat') {
+			$sub = $_POST['type'];
 			checkSub($sub);
 		}
 
-		if ($_POST['submit'] == 'category1') {
+		if (isset($_POST['submit']) && $_POST['submit'] == 'category1') {
 			category1($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1']);
 		}
-		else if ($_POST['submit'] == 'category2') {
+		else if (isset($_POST['submit']) && $_POST['submit'] == 'category2') {
 			category2($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2']);
 		}
-		else if ($_POST['submit'] == 'category3') {
+		else if (isset($_POST['submit']) && $_POST['submit'] == 'category3') {
 			category3($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2'], $_POST['subcat3'], $_POST['subcatname3']);
 		}
-		else if ($_POST['submit'] == 'category4') {
+		else if (isset($_POST['submit']) && $_POST['submit'] == 'category4') {
 			category4($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2'], $_POST['subcat3'], $_POST['subcatname3'], $_POST['subcat4'], $_POST['subcatname4']);
 		}
 
@@ -129,7 +129,7 @@
 			addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal);
 		}
 		
-		if ($_POST['command'] == 'addProdukShipped'){
+		if ($_POST['command'] == 'addProdukShipped') {
 			if (isset($_SESSION['logged'])) {
 				$username = $_SESSION['logged'];
 			}
@@ -307,6 +307,7 @@
 			}
 			addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto, $username, $kategori, $email);
 		}
+		
 		if ($_POST['command'] == 'addToko'){
 			if (isset($_SESSION['logged'])) {
 				$username = $_SESSION['logged'];
@@ -537,7 +538,7 @@
 		$query3 = pg_query($connectDB, $sql3);
 
 		$_SESSION['role'] = 'penjual';
-	};
+	}
 
 	function addJasaKirimToko($nama, $jasa_kirim){
 		$connectDB = connectDB();
@@ -545,7 +546,7 @@
 		$sql = "INSERT INTO tokokeren.TOKO_JASA_KIRIM(nama_toko, jasa_kirim) VALUES('$nama', '$jasa_kirim')";
 
 		$query = pg_query($connectDB, $sql);
-	};
+	}
 
 	function addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal){
 		$connectDB = connectDB();
@@ -616,6 +617,8 @@
 		}
 		else{
 			die("Error: $query");
+		}
+	}
 
 	function checkSub($sub) {
 		$connectDB = connectDB();
