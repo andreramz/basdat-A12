@@ -1,4 +1,5 @@
 <?php
+	require( __DIR__.'/../config.php');
 	if (!isset($_SESSION)) {
 		session_start();
 	}
@@ -330,25 +331,16 @@
 	}
 
 	function connectDB() {
-		$host = "localhost";
-		$dbname = "valianfil";
-		$username = "valianfil";
-		$password = "1234abcd";
+		$host = $GLOBALS['DB_HOST'];
+		$dbname = $GLOBALS['DB_NAME'];
+		$username = $GLOBALS['DB_USERNAME'];
+		$password = $GLOBALS['DB_PASS'];
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
 	}
 
 	function login($email, $password) {
-		/*$realemail = "admin@admin.com";
-		$realpass = "123456";
-
-		$penjualemail = "penjual@penjual.com";
-		$penjualpass = "123456";
-
-		$pembeliemail = "pembeli@pembeli.com";
-		$pembelipass = "123456";*/
-
 		$connectDB = connectDB();
 		$sql1 = "SELECT P.email, P.nama, P.password, PE.is_penjual FROM tokokeren.PENGGUNA AS P, tokokeren.PELANGGAN AS PE WHERE P.email = PE.email";
 		$sql2 = "SELECT P.email, P.nama, P.password FROM tokokeren.PENGGUNA AS P WHERE NOT EXISTS(SELECT * FROM tokokeren.PELANGGAN AS E WHERE P.email = E.email)";
@@ -356,10 +348,10 @@
 		$query1 = pg_query($connectDB, $sql1);
 		$query2 = pg_query($connectDB, $sql2);
 
-		if (!$sql1) {
+		if (!$query1) {
 			die("Error: ".$sql1);
 		}
-		if (!$sql2) {
+		if (!$query2) {
 			die("Error: ".$sql2);
 		}
 		
@@ -421,11 +413,19 @@
 
 	function register($email, $password, $name, $gender, $phone, $address) {
 		$connectDB = connectDB();
-		$sql = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ($email, $password, $name, $gender, CURRENT_DATE, $phone, $address)";
-		if (!$sql) {
+		$sql = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ('$email', '$password', '$name', '$gender', CURRENT_DATE, '$phone', '$address')";
+		$query = pg_query($connectDB, $sql);
+		if (!$query) {
 			die("Error: $sql");
 		}
+
+		$sql = "INSERT INTO tokokeren.PELANGGAN (email, is_penjual, nilai_reputasi, poin) VALUES ('$email', 'f', 0, 0)";
 		$query = pg_query($connectDB, $sql);
+		if (!$query) {
+			die("Error: $sql");
+		}
+
+		login($email, $password);
 	}
 
 	function lihat_transaksi_pulsa($email) {
@@ -533,7 +533,7 @@
 			$connectProduk = connectDB();
 			$queryProduk = pg_query($connectProduk, $sqlProduk);
 			while ($row = pg_fetch_assoc($queryProduk)) {
-				if($kode_produk = $row['kode_produk']){
+				if($kode_produk == $row['kode_produk']){
 					echo "kode produk sudah ada";
 					echo "";
 					$error ='f';
@@ -545,7 +545,7 @@
 			$connectToko = connectDB();
 			$queryToko = pg_query($connectToko, $sqlToko);
 			while ($row = pg_fetch_assoc($queryToko)) {
-				if($nama = $row[$queryToko]){
+				if($nama == $row["nama"]){
 					echo "nama toko sudah ada";
 					echo "";
 					$error ='f';

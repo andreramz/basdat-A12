@@ -1,4 +1,4 @@
-<?php session_start();?>
+<?php session_start(); require_once(__DIR__.'/config.php'); ?>
 
 <!DOCTYPE html>
 <html>
@@ -17,8 +17,6 @@
 						    <ul class="tabs tabs-transparent">
 							    <li class="tab"><a class="active black-text" href="#test1">Produk</a></li>
 							    <li class="tab"><a class="black-text" href="#test2">Kategori</a></li>
-							    <li class="tab"><a class="black-text" href="#test3">Toko</a></li>
-							    <li class="tab"><a class="black-text" href="#test4">Ranks</a></li>
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'admin') { ?>
 							    <li class="tab"><a class="black-text" href="#create-jasa-kirim"><strong>Buat Jasa Kirim</strong></a></li>
 							    <li class="tab"><a class="black-text" href="#create-promo"><strong>Buat Promo</strong></a></li>
@@ -41,6 +39,7 @@
 					</div>
 				</div>
 			<!-- </div> -->
+
 			<?php if (isset($_SESSION['regStatus']) && $_SESSION['regStatus'] == 'success') { ?>
 			<div>
 				<p class="green-text center-align" style="font-size: 17pt;">Account registration success! Now, you can enjoy shopping at Tokokeren.</p>
@@ -49,6 +48,7 @@
 			unset($_SESSION['regStatus']);
 			 ?>
 			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
+
 			<div id="see-transaksi" class="col s12">
 				<div class="container">
 					<div class="row">
@@ -388,10 +388,10 @@
 										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim[]">
 											<option value="" disabled selected>Pilih...</option>
 											<?php
-												$host = "localhost";
-												$dbname = "valianfil";
-												$username = "valianfil";
-												$password = "1234abcd";
+												$host = $GLOBALS['DB_HOST'];
+												$dbname = $GLOBALS['DB_NAME'];
+												$username = $GLOBALS['DB_USERNAME'];
+												$password = $GLOBALS['DB_PASS'];
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.JASA_KIRIM";
@@ -443,10 +443,10 @@
 										<select id="subkategori-product-shipped" name="subkategori-product-shipped">
 											<option value="" disabled selected>Pilih...</option>
 											<?php
-												$host = "localhost";
-												$dbname = "valianfil";
-												$username = "valianfil";
-												$password = "1234abcd";
+												$host = $GLOBALS['DB_HOST'];
+												$dbname = $GLOBALS['DB_NAME'];
+												$username = $GLOBALS['DB_USERNAME'];
+												$password = $GLOBALS['DB_PASS'];
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.SUB_KATEGORI";
@@ -519,28 +519,6 @@
 				</div>
 			</div>
 			<?php } ?>
-			<div id="test3" class="col s12">
-				<div class="container">
-					<div class="row">
-						<div class="col m2 s12 block"></div>
-						<div class="col m8 s12 block">
-							<p class="black-text">Coming soon :)</p>
-						</div>
-						<div class="col m2 s12 block"></div>
-					</div>
-				</div>
-			</div>
-			<div id="test4" class="col s12">
-				<div class="container">
-					<div class="row">
-						<div class="col m2 s12 block"></div>
-						<div class="col m8 s12 block">
-							<p class="black-text">Coming soon :)</p>
-						</div>
-						<div class="col m2 s12 block"></div>
-					</div>
-				</div>
-			</div>
 		</main>
 		<?php include("layout/footer.php"); ?>
 		<script>
@@ -599,6 +577,12 @@
 					});
 				});
 
+				$.validator.setDefaults({
+				        ignore: [],
+					    errorElement : 'span',
+					    errorClass: "invalid form-error"
+				});
+
 				$('select').material_select();
 				$('.modal').modal();
 				$('.datepicker').pickadate({
@@ -615,7 +599,7 @@
 		           		if (res.status == 'success') {
 		           			$("#promo-kategori").empty();
 		           			var options = '';
-		           			options += '<option selected disabled>Pilih Kategori</option>';
+		           			options += '<option selected disabled>Pilih kategori</option>';
 							$.each(res.response, function() {
 								options += '<option value="' + this.kode + '">' + this.nama + '</option>';
 							});
@@ -629,6 +613,7 @@
 		           }
 		       	});
 				$('#promo-kategori').change(function() {
+					$('#create-promo-form').valid();
 					$.ajax({
 			           type: "GET",
 			           url: "api.php?command=get_subcategories&category=" + $('#promo-kategori').val(),
@@ -643,7 +628,8 @@
 								    options.append($("<option />").val(this.kode).text(this.nama));
 								});
 								$("#promo-subkategori").material_select();
-			           		}
+								$("#create-promo-form label[for='promo-subkategori']").addClass('active');			           	
+							}
 			           		else if (res.status == 'failed') {
 			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
 			           			Materialize.toast('Error terjadi!', 4000); 
@@ -651,7 +637,34 @@
 			           }
 			       });
 				});
+				$('#promo-subkategori').change(function() {
+					$('#create-promo-form').valid();
+				})
+
+				$('#create-jasa-kirim-form').validate({
+				    rules: {
+				      "jasa-kirim-nama": {
+				        required: true
+				      },
+				      "jasa-kirim-lama-kirim": {
+				        required: true
+				      },
+				      "jasa-kirim-tarif": {
+				      	required: true
+				      },
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$("#create-jasa-kirim-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
 				    var url = "api.php?command=create_jasa_kirim"; // the script where you handle the form input.
 				    $.ajax({
 			           type: "POST",
@@ -659,20 +672,53 @@
 			           data: $("#create-jasa-kirim-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
+			           		try {
+		           				var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); 
+									$('ul.tabs').tabs('select_tab', 'test1');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembuatan Jasa Kirim gagal!<br/>Nama Jasa Kirim sudah ada!', 4000); 
+				           		}
 			           		}
-			           		else if (res.status == 'failed') {
-			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-			           			Materialize.toast('Pembuatan Jasa Kirim gagal!', 4000); 
-			           		}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Jasa Kirim gagal!<br/>Nama Jasa Kirim sudah ada!', 4000);
+			           		} 
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
+
+				$('#create-promo-form').validate({
+				    rules: {
+				      "promo-periode-awal": {
+				        required: true
+				      },
+				      "promo-periode-akhir": {
+				        required: true
+				      },
+				      "promo-kategori": {
+				      	required: true
+				      },
+				      "promo-subkategori": {
+				      	required: true
+				      }
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$("#create-promo-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
 				    var url = "api.php?command=create_promo"; // the script where you handle the form input
 				    $.ajax({
 			           type: "POST",
@@ -680,24 +726,55 @@
 			           data: $("#create-promo-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
-			           		}
-			           		else if (res.status == 'failed') {
-			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-			           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
-			           		}
+			           		try {
+				           		var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
+									$('ul.tabs').tabs('select_tab', 'test1');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
+				           		}
+				           	}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Promo gagal!');
+			           		} 
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
+
+				$('#review-form').validate({
+					rules: {
+				      "ulasan-kode-produk": {
+				        required: true
+				      },
+				      "ulasan-rating": {
+				        required: true
+				      },
+				      "ulasan-komentar": {
+				      	required: true
+				      },
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$('.review-btn').click(function() {
 					$('#modal-review #ulasan-kode-produk').val($(this).attr('data-kode-produk'));
 					$('#modal-review').modal('open');
 				});
+
 				$("#review-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
 				    var url = "api.php?command=create_review"; // the script where you handle the form input
 				    $.ajax({
 			           type: "POST",
@@ -705,21 +782,37 @@
 			           data: $("#review-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'test1');
-			           		}
-			           		else if (res.status == 'failed') {
-			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-			           			Materialize.toast('Pembuatan Review gagal!', 4000); 
-			           		}
+			           		try {
+				           		var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
+									$('#modal-review').modal('close');
+									$('ul.tabs').tabs('select_tab', 'test1');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembuatan Review gagal!<br/>Anda sudah pernah mereview produk ini!', 4000); 
+				           		}
+				           	}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Review gagal!<br/>Anda sudah pernah mereview produk ini!', 4000);
+			           		} 
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
 				$('#promo-periode-awal').change(function() {
-					$('#promo-periode-akhir').pickadate('picker').set('min', new Date($('#promo-periode-awal').val()));
+					$('#create-promo-form').valid();
+					var startDate = new Date($('#promo-periode-awal').val())
+					var endDate = new Date($('#promo-periode-akhir').val())
+					if (startDate > endDate)
+						$('#promo-periode-akhir').val('');
+						
+					$('#promo-periode-akhir').pickadate('picker').set('min', startDate);
+				});
+				$('#promo-periode-akhir').change(function() {
+					$('#create-promo-form').valid();
 				});
 			});
 		</script>

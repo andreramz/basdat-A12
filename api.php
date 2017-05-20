@@ -1,4 +1,5 @@
 <?php
+	require_once(__DIR__.'/config.php');
 	try {
 		session_start();
 
@@ -90,10 +91,10 @@
 	}
 
 	function connectDB() {
-		$host = "localhost";
-		$dbname = "valianfil";
-		$username = "valianfil";
-		$password = "1234abcd";
+		$host = $GLOBALS['DB_HOST'];
+		$dbname = $GLOBALS['DB_NAME'];
+		$username = $GLOBALS['DB_USERNAME'];
+		$password = $GLOBALS['DB_PASS'];
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
