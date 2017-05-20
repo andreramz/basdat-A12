@@ -1,4 +1,4 @@
-<?php session_start();?>
+<?php session_start(); require_once(__DIR__.'/config.php'); ?>
 
 <!DOCTYPE html>
 <html>
@@ -17,8 +17,6 @@
 						    <ul class="tabs tabs-transparent">
 							    <li class="tab"><a class="active black-text" href="#lihat-produk">Produk</a></li>
 							    <li class="tab"><a class="black-text" href="#test2">Kategori</a></li>
-							    <li class="tab"><a class="black-text" href="#test3">Toko</a></li>
-							    <li class="tab"><a class="black-text" href="#test4">Ranks</a></li>
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'admin') { ?>
 							    <li class="tab"><a class="black-text" href="#create-jasa-kirim"><strong>Buat Jasa Kirim</strong></a></li>
 							    <li class="tab"><a class="black-text" href="#create-promo"><strong>Buat Promo</strong></a></li>
@@ -41,6 +39,7 @@
 					</div>
 				</div>
 			<!-- </div> -->
+
 			<?php if (isset($_SESSION['regStatus']) && $_SESSION['regStatus'] == 'success') { ?>
 			<div>
 				<p class="green-text center-align" style="font-size: 17pt;">Account registration success! Now, you can enjoy shopping at Tokokeren.</p>
@@ -49,6 +48,7 @@
 			unset($_SESSION['regStatus']);
 			 ?>
 			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
+
 			<div id="see-transaksi" class="col s12">
 				<div class="container">
 					<div class="row">
@@ -175,7 +175,7 @@
 										<label for="ulasan-rating">Rating</label>
 									</div>
 									<div class="input-field">
-										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
+										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate">
 										<label for="ulasan-komentar">Komentar</label>
 									</div>
 								</div>
@@ -276,6 +276,8 @@
 						<div class="col m8 s12 block">
 						<?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'admin') { ?>
 							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="category-button">Create Category</button>
+							<span id="alert-category1" class="green-text"></span>
+							<span id="alert-category2" class="red-text"></span>
 							<div id="category" class="card-panel yellow lighten-3 black-text">
 								<div class="input-field">
 									<input id="category-code" type="text" name="category-code" class="validate">
@@ -286,7 +288,56 @@
 									<input id="category-name" type="text" name="category-name" class="validate">
 									<label for="category-name">Nama Kategori</label>
 								</div>
-								<div id="category-forms"></div>
+								<div id="category-forms">
+									<div id="sub-category-1" style="display: none;">
+										<h5>Subkategori 1</h5>
+										<div class="input-field">
+											<input type="text" id="sub1" class="validate subcode">
+											<label for="sub1">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-1"></span>
+										<div class="input-field">
+											<input type="text" id="subname1" class="validate">
+											<label for="subname1">Nama Subkategori</label>
+										</div>
+									</div>
+									<div id="sub-category-2" style="display: none;">
+										<h5>Subkategori 2</h5>
+										<div class="input-field">
+											<input type="text" id="sub2" class="validate subcode">
+											<label for="sub2">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-2"></span>
+										<div class="input-field">
+											<input type="text" id="subname2" class="validate">
+											<label for="subname2">Nama Subkategori</label>
+										</div>
+									</div>
+									<div id="sub-category-3" style="display: none;">
+										<h5>Subkategori 3</h5>
+										<div class="input-field">
+											<input type="text" id="sub3" class="validate subcode">
+											<label for="sub3">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-3"></span>
+										<div class="input-field">
+											<input type="text" id="subname3" class="validate">
+											<label for="subname3">Nama Subkategori</label>
+										</div>
+									</div>
+									<div id="sub-category-4" style="display: none;">
+										<h5>Subkategori 4</h5>
+										<div class="input-field">
+											<input type="text" id="sub4" class="validate subcode">
+											<label for="sub4">Kode Subkategori</label>
+										</div>
+										<span class="red-text" id="sub-alert-4"></span>
+										<div class="input-field">
+											<input type="text" id="subname4" class="validate">
+											<label for="subname4">Nama Subkategori</label>
+										</div>
+									</div>
+								</div>
 								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="subcategory-button" style="margin-top: 10px;">Create Sub-category</button>
 								<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 							</div>
@@ -437,10 +488,10 @@
 										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim[]">
 											<option value="" disabled selected>Pilih...</option>
 											<?php
-												$host = "localhost";
-												$dbname = "postgres";
-												$username = "postgres";
-												$password = "marjuan2005";
+												$host = $GLOBALS['DB_HOST'];
+												$dbname = $GLOBALS['DB_NAME'];
+												$username = $GLOBALS['DB_USERNAME'];
+												$password = $GLOBALS['DB_PASS'];
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.JASA_KIRIM";
@@ -492,10 +543,10 @@
 										<select id="subkategori-product-shipped" name="subkategori-product-shipped">
 											<option value="" disabled selected>Pilih...</option>
 											<?php
-												$host = "localhost";
-												$dbname = "postgres";
-												$username = "postgres";
-												$password = "marjuan2005";
+												$host = $GLOBALS['DB_HOST'];
+												$dbname = $GLOBALS['DB_NAME'];
+												$username = $GLOBALS['DB_USERNAME'];
+												$password = $GLOBALS['DB_PASS'];
 
 												$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 												$sql = "SELECT nama FROM tokokeren.SUB_KATEGORI";
@@ -546,12 +597,6 @@
 									</div>
 									<input type="hidden" name="command" value="addProdukShipped">
 									<button class="yellow darken-2 black-text waves-effect waves-light btn" type="submit" id="submit-button" style="margin-top: 10px;">Submit</button>
-										<!--<div class="btn">
-								        	<span>File</span>
-								        </div>
-								        <input type="file">
-									</div>
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>-->
 								</form>
 							</div>
 						</div>
@@ -560,31 +605,54 @@
 				</div>
 			</div>
 			<?php } ?>
-			<div id="test3" class="col s12">
-				<div class="container">
-					<div class="row">
-						<div class="col m2 s12 block"></div>
-						<div class="col m8 s12 block">
-							<p class="black-text">Coming soon :)</p>
-						</div>
-						<div class="col m2 s12 block"></div>
-					</div>
-				</div>
-			</div>
-			<div id="test4" class="col s12">
-				<div class="container">
-					<div class="row">
-						<div class="col m2 s12 block"></div>
-						<div class="col m8 s12 block">
-							<p class="black-text">Coming soon :)</p>
-						</div>
-						<div class="col m2 s12 block"></div>
-					</div>
-				</div>
-			</div>
 		</main>
 		<?php include("layout/footer.php"); ?>
 		<script>
+			$(".button-collapse").sideNav();
+			$(".indicator").css("background-color: black;");
+			$("#category").hide();
+
+			$('#modal-transaksi-pulsa-1').modal();
+			$('#modal-transaksi-pulsa-2').modal();
+			$('#modal-transaksi-shipped-1').modal();
+			$('#modal-transaksi-shipped-2').modal();
+
+			$("#transaksi-pulsa").hide();
+			$("#transaksi-shipped").hide();
+			$("#daftar-produk-1").hide();
+			var forms = 0;
+			$("#category-button").click(function() {
+				$("#category").show();
+				$("#category-button").hide();
+			});
+			$("#transaksi-pulsa-button").click(function() {
+				$("#transaksi-pulsa").show();
+				$("#transaksi-pulsa-button").hide();
+				$("#transaksi-shipped-button").hide();
+			});
+			$("#transaksi-shipped-button").click(function() {
+				$("#transaksi-shipped").show();
+				$("#transaksi-pulsa-button").hide();
+				$("#transaksi-shipped-button").hide();
+			});
+			$("#daftar-produk-1-button").click(function() {
+				$("#daftar-produk-1").show();
+			});
+			$("#subcategory-button").click(function() {
+				forms++;
+				if (forms < 4) {
+					var subs = "#sub-category-"+forms;
+					$(subs).show();
+				}
+				if (forms >= 4) {
+					$("#subcategory-button").hide();
+				}
+			});
+			$('.datepicker').pickadate({
+				selectMonths: true, // Creates a dropdown to control month
+				selectYears: 15 // Creates a dropdown of 15 years to control year
+			});
+
 			$(document).ready(function() {
 				$(".button-collapse").sideNav();
 				$(".indicator").css("background-color: black;");
@@ -608,7 +676,8 @@
 				$("#kembali-transaksi-button").hide();
 				$("#lihat-pulsa").hide();
 				$("#lihat-shipped").hide();
-				var forms = 1;
+
+				var forms = 0;
 				$("#category-button").click(function() {
 					$("#category").show();
 					$("#category-button").hide();
@@ -644,8 +713,14 @@
 					$("#daftar-produk-1").show();
 				});
 				$("#subcategory-button").click(function() {
-					$("#category-forms").append("<div><h5>Subkategori "+ forms +"</h5><div class='input-field'><input id='sub-categorycode-"+forms+"' type='email' name='sub-categorycode-"+forms+"' class='validate sub-category'><label for='sub-categorycode-"+forms+"'>Kode subkategori</label><div class='input-field'><input id='sub-categoryname-"+forms+"' type='email' name='sub-categoryname-"+forms+"' class='validate'><label for='sub-categoryname-"+forms+"'>Nama subkategori</label>");
 					forms++;
+					if (forms < 4) {
+						var subs = "#sub-category-"+forms;
+						$(subs).show();
+					}
+					if (forms >= 4) {
+						$("#subcategory-button").hide();
+					}
 				});
 
 				$('#category-code').on("input propertychange", function() {
@@ -658,6 +733,12 @@
 							$("#catcode-alert").html("Kategori tidak unik atau sudah ada");
 						}
 					});
+				});
+
+				$.validator.setDefaults({
+				        ignore: [],
+					    errorElement : 'span',
+					    errorClass: "invalid form-error"
 				});
 
 				$('select').material_select();
@@ -676,7 +757,7 @@
 		           		if (res.status == 'success') {
 		           			$("#promo-kategori").empty();
 		           			var options = '';
-		           			options += '<option selected disabled>Pilih Kategori</option>';
+		           			options += '<option selected disabled>Pilih kategori</option>';
 							$.each(res.response, function() {
 								options += '<option value="' + this.kode + '">' + this.nama + '</option>';
 							});
@@ -690,6 +771,7 @@
 		           }
 		       	});
 				$('#promo-kategori').change(function() {
+					$('#create-promo-form').valid();
 					$.ajax({
 			           type: "GET",
 			           url: "api.php?command=get_subcategories&category=" + $('#promo-kategori').val(),
@@ -704,7 +786,8 @@
 								    options.append($("<option />").val(this.kode).text(this.nama));
 								});
 								$("#promo-subkategori").material_select();
-			           		}
+								$("#create-promo-form label[for='promo-subkategori']").addClass('active');			           	
+							}
 			           		else if (res.status == 'failed') {
 			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
 			           			Materialize.toast('Error terjadi!', 4000); 
@@ -712,7 +795,34 @@
 			           }
 			       });
 				});
+				$('#promo-subkategori').change(function() {
+					$('#create-promo-form').valid();
+				})
+
+				$('#create-jasa-kirim-form').validate({
+				    rules: {
+				      "jasa-kirim-nama": {
+				        required: true
+				      },
+				      "jasa-kirim-lama-kirim": {
+				        required: true
+				      },
+				      "jasa-kirim-tarif": {
+				      	required: true
+				      },
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$("#create-jasa-kirim-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
 				    var url = "api.php?command=create_jasa_kirim"; // the script where you handle the form input.
 				    $.ajax({
 			           type: "POST",
@@ -720,20 +830,53 @@
 			           data: $("#create-jasa-kirim-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'lihat-produk');
+			           		try {
+		           				var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Pembuatan Jasa Kirim berhasil!', 4000); 
+									$('ul.tabs').tabs('select_tab', 'test1');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembuatan Jasa Kirim gagal!<br/>Nama Jasa Kirim sudah ada!', 4000); 
+				           		}
 			           		}
-			           		else if (res.status == 'failed') {
-			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-			           			Materialize.toast('Pembuatan Jasa Kirim gagal!', 4000); 
-			           		}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Jasa Kirim gagal!<br/>Nama Jasa Kirim sudah ada!', 4000);
+			           		} 
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
+
+				$('#create-promo-form').validate({
+				    rules: {
+				      "promo-periode-awal": {
+				        required: true
+				      },
+				      "promo-periode-akhir": {
+				        required: true
+				      },
+				      "promo-kategori": {
+				      	required: true
+				      },
+				      "promo-subkategori": {
+				      	required: true
+				      }
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$("#create-promo-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
 				    var url = "api.php?command=create_promo"; // the script where you handle the form input
 				    $.ajax({
 			           type: "POST",
@@ -741,24 +884,52 @@
 			           data: $("#create-promo-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'lihat-produk');
-			           		}
-			           		else if (res.status == 'failed') {
-			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-			           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
+			           		try {
+				           		var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Pembuatan Promo berhasil!', 4000); 
+									$('ul.tabs').tabs('select_tab', 'test1');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembuatan Promo gagal!<br/>Kode promo maksimal 20 karakter!', 4000); 
+				           		}
+				           	}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Promo gagal!<br/>Kode promo maksimal 20 karakter!',4000);
 			           		}
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
+
+				$('#review-form').validate({
+					rules: {
+				      "ulasan-kode-produk": {
+				        required: true
+				      },
+				      "ulasan-rating": {
+				        required: true
+				      },
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$('.review-btn').click(function() {
 					$('#modal-review #ulasan-kode-produk').val($(this).attr('data-kode-produk'));
 					$('#modal-review').modal('open');
 				});
+
 				$("#review-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
 				    var url = "api.php?command=create_review"; // the script where you handle the form input
 				    $.ajax({
 			           type: "POST",
@@ -766,24 +937,195 @@
 			           data: $("#review-form").serialize(), // serializes the form's elements.
 			           success: function(data)
 			           {
-			           		var res = JSON.parse(data);
-			           		if (res.status == 'success') {
-			           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
-								$('ul.tabs').tabs('select_tab', 'lihat-produk');
-			           		}
-			           		else if (res.status == 'failed') {
-			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-			           			Materialize.toast('Pembuatan Review gagal!', 4000); 
+			           		try {
+				           		var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
+									$('#modal-review').modal('close');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembuatan Review gagal!<br/>Anda sudah pernah mereview produk ini!', 4000); 
+				           		}
+				           	}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Review gagal!<br/>Anda sudah pernah mereview produk ini!', 4000);
 			           		}
 			           }
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
 				$('#promo-periode-awal').change(function() {
-					$('#promo-periode-akhir').pickadate('picker').set('min', new Date($('#promo-periode-awal').val()));
+					$('#create-promo-form').valid();
+					var startDate = new Date($('#promo-periode-awal').val())
+					var endDate = new Date($('#promo-periode-akhir').val())
+					if (startDate > endDate)
+						$('#promo-periode-akhir').val('');
+						
+					$('#promo-periode-akhir').pickadate('picker').set('min', startDate);
+				});
+				$('#promo-periode-akhir').change(function() {
+					$('#create-promo-form').valid();
+				});
+				
+				$("#sub1").on("input propertychange", function() {
+					var subcode1 = $("#sub1").val();
+					if (subcode1 == "") {
+						$("#sub-alert-1").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode1}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-1").html("");
+						}
+						else {
+							$("#sub-alert-1").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}
+				});
+
+				$("#sub2").on("input propertychange", function() {
+					var subcode2 = $("#sub2").val();
+					if (subcode2 == "") {
+						$("#sub-alert-2").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode2}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-2").html("");
+						}
+						else {
+							$("#sub-alert-2").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}
+
+					
+				});
+
+				$("#sub3").on("input propertychange", function() {
+					var subcode3 = $("#sub3").val();
+					if (subcode3 == "") {
+						$("#sub-alert-3").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode3}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-3").html("");
+						}
+						else {
+							$("#sub-alert-3").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}			
+				});
+
+				$("#sub4").on("input propertychange", function() {
+					var subcode4 = $("#sub4").val();
+					if (subcode4 == "") {
+						$("#sub-alert-4").html("Bagian ini tidak boleh kosong");
+					}
+					else {
+						$.post("config/config.php", {type: "subcat", typed: subcode4}, function(response) {
+						if (response == "benar") {
+							$("#sub-alert-4").html("");
+						}
+						else {
+							$("#sub-alert-4").html("Kode tidak unik atau sudah ada");
+						}
+					});
+					}
+				});
+
+				$("#submit-button").on("click", function() {
+					if (forms == 1) {
+						$.post("config/config.php", {
+							submit: "category1",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+					else if (forms == 2) {
+						$.post("config/config.php", {
+							submit: "category2",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val(),
+							subcat2: $("#sub2").val(),
+							subcatname2: $("#subname2").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+					else if (forms == 3) {
+						$.post("config/config.php", {
+							submit: "category3",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val(),
+							subcat2: $("#sub2").val(),
+							subcatname2: $("#subname2").val(),
+							subcat3: $("#sub3").val(),
+							subcatname3: $("#subname3").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
+					else if (forms == 4) {
+						$.post("config/config.php", {
+							submit: "category4",
+							categorycode: $("#category-code").val(),
+							categoryname: $("#category-name").val(),
+							subcat1: $("#sub1").val(),
+							subcatname1: $("#subname1").val(),
+							subcat2: $("#sub2").val(),
+							subcatname2: $("#subname2").val(),
+							subcat3: $("#sub3").val(),
+							subcatname3: $("#subname3").val(),
+							subcat3: $("#sub4").val(),
+							subcatname3: $("#subname4").val()
+						}, function(response) {
+							if (response == "sukses") {
+								$("#alert-category1").html("Kategori berhasil dibuat");
+								$("#alert-category2").html("");
+							}
+							else {
+								$("#alert-category1").html("");
+								$("#alert-category2").html("Periksa kembali input anda");
+							}
+						});
+					}
 				});
 			});
 		</script>
-
 	</body>
 </html>

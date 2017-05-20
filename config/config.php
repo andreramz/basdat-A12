@@ -1,4 +1,5 @@
 <?php
+	require( __DIR__.'/../config.php');
 	if (!isset($_SESSION)) {
 		session_start();
 	}
@@ -13,6 +14,28 @@
 			$typed = $_POST['typed'];
 			checkEmail($typed);
 		}
+		else if ($_POST['type'] == 'category') {
+			$category = $_POST['typed'];
+			checkCategory($category);
+		}
+		else if ($_POST['type'] == 'subcat') {
+			$sub = $_POST['typed'];
+			checkSub($sub);
+		}
+
+		if ($_POST['submit'] == 'category1') {
+			category1($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1']);
+		}
+		else if ($_POST['submit'] == 'category2') {
+			category2($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2']);
+		}
+		else if ($_POST['submit'] == 'category3') {
+			category3($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2'], $_POST['subcat3'], $_POST['subcatname3']);
+		}
+		else if ($_POST['submit'] == 'category4') {
+			category4($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2'], $_POST['subcat3'], $_POST['subcatname3'], $_POST['subcat4'], $_POST['subcatname4']);
+		}
+
 		if ($_POST['command'] == 'login') {
 			$email = $_POST['email'];
 			$password = $_POST['password'];
@@ -342,25 +365,16 @@
 	}
 
 	function connectDB() {
-		$host = "localhost";
-		$dbname = "postgres";
-		$username = "postgres";
-		$password = "marjuan2005";
+		$host = $GLOBALS['DB_HOST'];
+		$dbname = $GLOBALS['DB_NAME'];
+		$username = $GLOBALS['DB_USERNAME'];
+		$password = $GLOBALS['DB_PASS'];
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
 	}
 
 	function login($email, $password) {
-		/*$realemail = "admin@admin.com";
-		$realpass = "123456";
-
-		$penjualemail = "penjual@penjual.com";
-		$penjualpass = "123456";
-
-		$pembeliemail = "pembeli@pembeli.com";
-		$pembelipass = "123456";*/
-
 		$connectDB = connectDB();
 		$sql1 = "SELECT P.email, P.nama, P.password, PE.is_penjual FROM tokokeren.PENGGUNA AS P, tokokeren.PELANGGAN AS PE WHERE P.email = PE.email";
 		$sql2 = "SELECT P.email, P.nama, P.password FROM tokokeren.PENGGUNA AS P WHERE NOT EXISTS(SELECT * FROM tokokeren.PELANGGAN AS E WHERE P.email = E.email)";
@@ -368,10 +382,10 @@
 		$query1 = pg_query($connectDB, $sql1);
 		$query2 = pg_query($connectDB, $sql2);
 
-		if (!$sql1) {
+		if (!$query1) {
 			die("Error: ".$sql1);
 		}
-		if (!$sql2) {
+		if (!$query2) {
 			die("Error: ".$sql2);
 		}
 		
@@ -433,11 +447,19 @@
 
 	function register($email, $password, $name, $gender, $phone, $address) {
 		$connectDB = connectDB();
-		$sql = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ($email, $password, $name, $gender, CURRENT_DATE, $phone, $address)";
-		if (!$sql) {
+		$sql = "INSERT INTO tokokeren.PENGGUNA (email, password, nama, jenis_kelamin, tgl_lahir, no_telp, alamat) VALUES ('$email', '$password', '$name', '$gender', CURRENT_DATE, '$phone', '$address')";
+		$query = pg_query($connectDB, $sql);
+		if (!$query) {
 			die("Error: $sql");
 		}
+
+		$sql = "INSERT INTO tokokeren.PELANGGAN (email, is_penjual, nilai_reputasi, poin) VALUES ('$email', 'f', 0, 0)";
 		$query = pg_query($connectDB, $sql);
+		if (!$query) {
+			die("Error: $sql");
+		}
+
+		login($email, $password);
 	}
 
 	function lihat_transaksi_pulsa($email) {
@@ -540,12 +562,13 @@
 			die("Error: $query1 or $query2");
 		}
 	}
+	
 	function checkProduk($kode_produk, $error){
 			$sqlProduk ="SELECT kode_produk FROM tokokeren.produk";
 			$connectProduk = connectDB();
 			$queryProduk = pg_query($connectProduk, $sqlProduk);
 			while ($row = pg_fetch_assoc($queryProduk)) {
-				if($kode_produk = $row['kode_produk']){
+				if($kode_produk == $row['kode_produk']){
 					echo "kode produk sudah ada";
 					echo "";
 					$error ='f';
@@ -557,7 +580,7 @@
 			$connectToko = connectDB();
 			$queryToko = pg_query($connectToko, $sqlToko);
 			while ($row = pg_fetch_assoc($queryToko)) {
-				if($nama = $row[$queryToko]){
+				if($nama == $row["nama"]){
 					echo "nama toko sudah ada";
 					echo "";
 					$error ='f';
@@ -593,6 +616,90 @@
 		}
 		else{
 			die("Error: $query");
+
+	function checkSub($sub) {
+		$connectDB = connectDB();
+		$sql = "SELECT kode FROM tokokeren.SUB_KATEGORI WHERE kode = '$sub'";
+		$query = pg_query($connectDB, $sql);
+
+		if (pg_num_rows($query) > 0) {
+			echo "salah";
+		}
+		else {
+			echo "benar";
+		}
+	}
+
+	function category1($catcode, $catname, $sub1, $subname1) {
+		$connectDB = connectDB();
+		$sql = "INSERT INTO tokokeren.KATEGORI_UTAMA (kode, nama) VALUES ('$catcode', '$catname')";
+		$sql1 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub1', '$catcode', '$subname1')";
+		$query = pg_query($connectDB, $sql);
+		$query1 = pg_query($connectDB, $sql1);
+
+		if ($query && $query1) {
+			echo "sukses";
+		}
+		else {
+			echo "gagal";
+		}
+	}
+
+	function category2($catcode, $catname, $sub1, $subname1, $sub2, $subname2) {
+		$connectDB = connectDB();
+		$sql = "INSERT INTO tokokeren.KATEGORI_UTAMA (kode, nama) VALUES ('$catcode', '$catname')";
+		$sql1 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub1', '$catcode', '$subname1')";
+		$sql2 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub2', '$catcode', '$subname2')";
+		$query = pg_query($connectDB, $sql);
+		$query1 = pg_query($connectDB, $sql1);
+		$query2 = pg_query($connectDB, $sql2);
+
+		if ($query && $query1 && $query2) {
+			echo "sukses";
+		}
+		else {
+			echo "gagal";
+		}
+	}
+
+	function category3($catcode, $catname, $sub1, $subname1, $sub2, $subname2, $sub3, $subname3) {
+		$connectDB = connectDB();
+		$sql = "INSERT INTO tokokeren.KATEGORI_UTAMA (kode, nama) VALUES ('$catcode', '$catname')";
+		$sql1 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub1', '$catcode', '$subname1')";
+		$sql2 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub2', '$catcode', '$subname2')";
+		$sql3 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub3', '$catcode', '$subname3')";
+		$query = pg_query($connectDB, $sql);
+		$query1 = pg_query($connectDB, $sql1);
+		$query2 = pg_query($connectDB, $sql2);
+		$query3 = pg_query($connectDB, $sql3);
+
+		if ($query && $query1 && $query2 && $query3) {
+			echo "sukses";
+		}
+		else {
+			echo "gagal";
+		}
+	}
+
+	function category4($catcode, $catname, $sub1, $subname1, $sub2, $subname2, $sub3, $subname3, $sub4, $subname4) {
+		$connectDB = connectDB();
+		$sql = "INSERT INTO tokokeren.KATEGORI_UTAMA (kode, nama) VALUES ('$catcode', '$catname')";
+		$sql1 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub1', '$catcode', '$subname1')";
+		$sql2 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub2', '$catcode', '$subname2')";
+		$sql3 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub3', '$catcode', '$subname3')";
+		$sql4 = "INSERT INTO tokokeren.SUB_KATEGORI (kode, kode_kategori, nama) VALUES ('$sub4', '$catcode', '$subname4')";
+		$query = pg_query($connectDB, $sql);
+		$query1 = pg_query($connectDB, $sql1);
+		$query2 = pg_query($connectDB, $sql2);
+		$query3 = pg_query($connectDB, $sql3);
+		$query4 = pg_query($connectDB, $sql4);
+
+		if ($query && $query1 && $query2 && $query3 && $query4) {
+			echo "sukses";
+		}
+		else {
+			echo "gagal";
+
 		}
 	}
 ?>

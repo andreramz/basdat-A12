@@ -44,3 +44,4 @@
 </footer>
 <script src="src/js/jquery-3.1.1.min.js"></script>
 <script src="materialize/js/materialize.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
