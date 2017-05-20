@@ -163,6 +163,7 @@
 								</div>";
 							}
 							?>
+							<button class="yellow darken-2 black-text waves-effect waves-light btn" id="kembali-transaksi-button">Kembali</button>
 							<div id="modal-review" class="modal">
 								<form id="review-form">
 							  	<div class="modal-content">
@@ -175,7 +176,7 @@
 										<label for="ulasan-rating">Rating</label>
 									</div>
 									<div class="input-field">
-										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate" required>
+										<input id="ulasan-komentar" type="text" name="ulasan-komentar" class="validate">
 										<label for="ulasan-komentar">Komentar</label>
 									</div>
 								</div>
@@ -197,7 +198,7 @@
 							<div class="card-panel yellow lighten-3 ">
 								<img class="product" src="src/resources/lamborghini.jpg">
 								<h5>Lamborghini Aventador</h5>
-								<p class="valign-wrapper">300 cc, bensin 60 L, max speed 300 km/jam, keluaran tahun 2009, masih mulus, bisa nego</p>
+								<p class="valign-wrapper">3000 cc, bensin 60 L, max speed 300 km/jam, keluaran tahun 2009, masih mulus, bisa nego</p>
 								<span class="price">Rp 13.500.000</span>
 							</div>
 						</div>
@@ -542,6 +543,7 @@
 				$("#transaksi-pulsa").hide();
 				$("#transaksi-shipped").hide();
 				$("#daftar-produk-1").hide();
+				$("#kembali-transaksi-button").hide();
 				var forms = 1;
 				$("#category-button").click(function() {
 					$("#category").show();
@@ -551,11 +553,20 @@
 					$("#transaksi-pulsa").show();
 					$("#transaksi-pulsa-button").hide();
 					$("#transaksi-shipped-button").hide();
+					$("#kembali-transaksi-button").show();
 				});
 				$("#transaksi-shipped-button").click(function() {
 					$("#transaksi-shipped").show();
 					$("#transaksi-pulsa-button").hide();
 					$("#transaksi-shipped-button").hide();
+					$("#kembali-transaksi-button").show();
+				});
+				$("#kembali-transaksi-button").click(function() {
+					$("#transaksi-pulsa").hide();
+					$("#transaksi-shipped").hide();
+					$("#kembali-transaksi-button").hide();
+					$("#transaksi-pulsa-button").show();
+					$("#transaksi-shipped-button").show();
 				});
 				$("#daftar-produk-1-button").click(function() {
 					$("#daftar-produk-1").show();
@@ -734,12 +745,12 @@
 				           		}
 				           		else if (res.status == 'failed') {
 				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-				           			Materialize.toast('Pembuatan Promo gagal!', 4000); 
+				           			Materialize.toast('Pembuatan Promo gagal!<br/>Kode promo maksimal 20 karakter!', 4000); 
 				           		}
 				           	}
 			           		catch ($e) {
 			           			console.log('Error: ' + $e);
-			           			Materialize.toast('Pembuatan Promo gagal!');
+			           			Materialize.toast('Pembuatan Promo gagal!<br/>Kode promo maksimal 20 karakter!',4000);
 			           		} 
 			           }
 			      	});
@@ -753,9 +764,6 @@
 				      },
 				      "ulasan-rating": {
 				        required: true
-				      },
-				      "ulasan-komentar": {
-				      	required: true
 				      },
 				    },
 				    messages: {},
@@ -787,7 +795,6 @@
 				           		if (res.status == 'success') {
 				           			Materialize.toast('Pembuatan Review berhasil!', 4000); 
 									$('#modal-review').modal('close');
-									$('ul.tabs').tabs('select_tab', 'test1');
 				           		}
 				           		else if (res.status == 'failed') {
 				           			console.error('Error using API, response: ' + JSON.stringify(res.response));

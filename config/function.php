@@ -30,4 +30,6 @@
 
 		return pg_query($connectDB, $sql);
 	}
+
+	
 ?>
