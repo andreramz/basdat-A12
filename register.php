@@ -38,8 +38,7 @@
 								<div class="input-field">
 									<select id="gender" name="gender">
 										<option value="" disabled selected>Pilih...</option>
-									    <option value="L">Laki-Laki</option>
-									    <option value="P">Perempuan</option>
+									    
 								    </select>
 								    <label for="gender">Jenis Kelamin</label>
 								</div>
