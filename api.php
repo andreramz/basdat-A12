@@ -91,9 +91,9 @@
 
 	function connectDB() {
 		$host = "localhost";
-		$dbname = "valianfil";
-		$username = "valianfil";
-		$password = "1234abcd";
+		$dbname = "postgres";
+		$username = "postgres";
+		$password = "marjuan2005";
 
 		$connect = pg_connect("host=".$host." dbname=".$dbname." user=".$username." password=".$password);
 		return $connect;
