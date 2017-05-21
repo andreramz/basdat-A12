@@ -46,16 +46,11 @@
 		return pg_query($connectDB, $sql);
 	}
 
-	function lihat_shipped_toko($sub_kategori)
+	function lihat_shipped_toko($sub_kategori, $toko)
 	{
 		$connectDB = connectDB();
-		$sql = "SELECT SP.kode_produk, P.nama, P.harga, P.deskripsi, SP.is_asuransi, SP.stok, SP.is_baru, SP.harga_grosir FROM tokokeren.SHIPPED_PRODUK AS SP, tokokeren.PRODUK AS P WHERE SP.kode_produk = P.kode_produk AND SP.kategori = '".$sub_kategori."'";
+		$sql = "SELECT SP.kode_produk, P.nama, P.harga, P.deskripsi, SP.is_asuransi, SP.stok, SP.is_baru, SP.harga_grosir FROM tokokeren.SHIPPED_PRODUK AS SP, tokokeren.PRODUK AS P, tokokeren.TOKO WHERE SP.kode_produk = P.kode_produk AND SP.kategori = '".$sub_kategori."' AND SP.nama_toko = '".$toko."'";
 
 		return pg_query($connectDB, $sql);
 	}
-	// function lihat_kategori()
-	// {
-	// 	$connectDB = connectDB();
-	// 	$sql = "SELECT"
-	// }
 ?>

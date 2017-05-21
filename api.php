@@ -23,6 +23,13 @@
 			elseif ($command == 'get_toko') {
 				$ret = getToko();
 			}
+			elseif ($command == 'get_kategori_toko') {
+				$toko = $_GET['toko'];
+				if (!isset($toko))
+					throw new Exception('get_kategori_toko arguments are missing');
+
+				$ret = getKategoriToko($toko);
+			}
 			else {
 				throw new Exception('Command does not exist');
 			}
@@ -121,6 +128,26 @@
 	function getCategories() {
 		$connectDB = connectDB();
 		$sql = "SELECT * FROM tokokeren.KATEGORI_UTAMA";
+		
+		$res = pg_query($connectDB, $sql);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+		
+		$val = array();
+		while ($row = pg_fetch_assoc($res)) {
+			$val[] = ($row);
+		}
+
+		return $val;
+	}
+
+	function getKategoriToko($toko)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT K.* FROM tokokeren.KATEGORI_UTAMA AS K, tokokeren.SHIPPED_PRODUK AS SP, tokokeren.SUB_KATEGORI AS SK WHERE SP.nama_toko = '".$toko."' AND SP.kategori = SK.kode AND SK.kode_kategori = K.kode";
 		
 		$res = pg_query($connectDB, $sql);
 		$err = pg_last_error();

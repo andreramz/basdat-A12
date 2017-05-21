@@ -130,7 +130,7 @@
 
 	if ($_POST['command'] == 'lihat-produk-toko') {
 		echo "<script>console.log('masuk lihat produk toko')</script>";
-
+		
 	}
 
 	function connectDB() {

@@ -250,13 +250,20 @@
 								</table>
 							</div>
 							<div id='lihat-shipped'>
-								<form action="./config/config.php" method="post">
 									<select id="pilih-toko"  name="toko-shipped">
-										<option value="" disabled selected>Pilih Toko</option>
+										<option value="" disabled selected>Pilih Toko...</option>
 									</select>
 									<input type="hidden" name="command" value="lihat-produk-toko">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Lihat Produk</button>
-								</form>
+									<button id="lihat-produk-button" class="yellow darken-2 black-text waves-effect waves-light btn" style="margin-top: 10px;">Lihat Produk</button>
+							</div>
+							<div id='lihat-shipped-toko'>
+								<select id="pilih-kategori">
+									<option value="" disabled selected>Pilih Kategori...</option>
+								</select>
+								<select id="pilih-sub-kategori">
+									<option value="" disabled selected>Pilih Subkategori...</option>
+								</select>
+								<div id="daftar-produk-shipped"></div>
 							</div>
 						</div>
 					</div>
@@ -421,7 +428,6 @@
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
 								<form action="./config/config.php" method="post">
-								<!--<form onsubmit="Materialize.toast('Pembuatan Produk Pulsa berhasil!', 4000); $('ul.tabs').tabs('select_tab', 'lihat-produk'); return false;">-->
 								<div class="input-field">
 									<input id="kode-product-pulsa" pattern=".{8,8}" type="text" name="kode-product-pulsa" class="validate" required>
 									<label for="kode-product-pulsa">Kode Produk</label>
@@ -651,23 +657,7 @@
 			$(document).ready(function() {
 				$(".button-collapse").sideNav();
 				$(".indicator").css("background-color: black;");
-				$("#category").hide();
-				
-				<?php 
-				/*
-				try {
-					$result = lihat_transaksi_shipped($_SESSION['email']);
-					$rees = "";
-					while($row = pg_fetch_assoc($result)) {
-						$rees .= "$('#daftar-produk-".$row['no_invoice']."').modal();";
-					}
-					echo $rees;
-				} catch (Exception $e) {
-					echo 'console.log('. $e->getMessage() .');';
-				}
-				*/
-				?>
-				
+				$("#category").hide();				
 
 				$("#transaksi-pulsa").hide();
 				$("#transaksi-shipped").hide();
@@ -675,6 +665,7 @@
 				$("#kembali-transaksi-button").hide();
 				$("#lihat-pulsa").hide();
 				$("#lihat-shipped").hide();
+				$("#lihat-shipped-toko").hide();
 
 				var forms = 0;
 				$("#category-button").click(function() {
@@ -707,6 +698,10 @@
 				$("#lihat-shipped-button").click(function() {
 					$("#lihat-pulsa").hide();
 					$("#lihat-shipped").show();
+				});
+				$("#lihat-produk-button").click(function() {
+					$("#lihat-shipped-toko").show();
+					$("#lihat-shipped").hide();
 				});
 				$("#daftar-produk-1-button").click(function() {
 					$("#daftar-produk-1").show();
@@ -768,6 +763,54 @@
 		           			Materialize.toast('Error terjadi!', 4000); 
 		           		}
 		          	}
+				});
+				$('#pilih-toko').change(function() {
+					$.ajax({
+						type: "GET",
+			          	url: "api.php?command=get_kategori_toko&toko=" + $('#pilih-toko').val(),
+			           	success: function(data)
+			           	{
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			$("#pilih-kategori").empty();
+			           			var string = '';
+			           			string += '<option selected disabled>Pilih Kategori...</option>';
+								$.each(res.response, function() {
+								    string += '<option value="' + this.kode + '">' + this.nama + '</option>';
+								});
+								$("#pilih-kategori").html(string);		           	
+								$("#pilih-kategori").material_select();		           	
+							}
+			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+			           			Materialize.toast('Error terjadi!', 4000); 
+			           		}
+			           }
+					})
+				});
+				$('#pilih-kategori').change(function() {
+					$.ajax({
+						type: "GET",
+			          	url: "api.php?command=get_subcategories&category=" + $('#pilih-kategori').val(),
+			           	success: function(data)
+			           	{
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			$("#pilih-sub-kategori").empty();
+			           			var string = '';
+			           			string += '<option selected disabled>Pilih Sub-kategori...</option>';
+								$.each(res.response, function() {
+								    string += '<option value="' + this.kode + '">' + this.nama + '</option>';
+								});
+								$("#pilih-sub-kategori").html(string);		           	
+								$("#pilih-sub-kategori").material_select();		           	
+							}
+			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+			           			Materialize.toast('Error terjadi!', 4000); 
+			           		}
+			           }
+					})
 				});
 				$.ajax({
 		           type: "GET",
