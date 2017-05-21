@@ -30,6 +30,23 @@
 
 				$ret = getKategoriToko($toko);
 			}
+			elseif ($command == 'get_sub_kategori_toko') {
+				$toko = $_GET['toko'];
+				$kategori = $_GET['kategori'];
+				if (!isset($toko) || !isset($kategori))
+					throw new Exception('get_sub_kategori_toko arguments are missing');
+
+				$ret = getSubcategoriesByTokoCategory($toko, $kategori);
+			}
+			elseif ($command == 'get_daftar_barang') {
+				$toko = $_GET['toko'];
+				$subkategori = $_GET['subkategori'];
+
+				if (!isset($toko) || !isset($subkategori))
+					throw new Exception('get_daftar_barang arguments are missing');
+
+				$ret = getDaftarBarang($toko, $subkategori);
+			}
 			else {
 				throw new Exception('Command does not exist');
 			}
@@ -187,6 +204,46 @@
 	function getSubcategoriesByCategory($category) {
 		$connectDB = connectDB();
 		$sql = "SELECT S.* FROM tokokeren.SUB_KATEGORI AS S WHERE S.kode_kategori = '$category'";
+		
+		$res = pg_query($connectDB, $sql);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+		
+		$val = array();
+		while ($row = pg_fetch_assoc($res)) {
+			$val[] = ($row);
+		}
+
+		return $val;
+	}
+
+	function getSubcategoriesByTokoCategory($toko, $category)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT S.* FROM tokokeren.SUB_KATEGORI AS S, tokokeren.SHIPPED_PRODUK AS SP WHERE S.kode_kategori = '$category' AND SP.nama_toko = '$toko' AND SP.kategori = S.kode";
+		
+		$res = pg_query($connectDB, $sql);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+		
+		$val = array();
+		while ($row = pg_fetch_assoc($res)) {
+			$val[] = ($row);
+		}
+
+		return $val;
+	}
+
+	function getDaftarBarang($toko, $subkategori)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT DISTINCT SP.kode_produk, P.nama, P.harga, P.deskripsi, SP.is_asuransi, SP.stok, SP.is_baru, SP.harga_grosir FROM tokokeren.SHIPPED_PRODUK AS SP, tokokeren.PRODUK AS P, tokokeren.TOKO WHERE SP.kode_produk = P.kode_produk AND SP.kategori = '$subkategori' AND SP.nama_toko = '$toko'";
 		
 		$res = pg_query($connectDB, $sql);
 		$err = pg_last_error();

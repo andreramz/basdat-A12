@@ -786,12 +786,12 @@
 			           			Materialize.toast('Error terjadi!', 4000); 
 			           		}
 			           }
-					})
+					});
 				});
 				$('#pilih-kategori').change(function() {
 					$.ajax({
 						type: "GET",
-			          	url: "api.php?command=get_subcategories&category=" + $('#pilih-kategori').val(),
+			          	url: "api.php?command=get_sub_kategori_toko&kategori=" + $('#pilih-kategori').val() + "&toko=" + $('#pilih-toko').val(),
 			           	success: function(data)
 			           	{
 			           		var res = JSON.parse(data);
@@ -810,7 +810,43 @@
 			           			Materialize.toast('Error terjadi!', 4000); 
 			           		}
 			           }
-					})
+					});
+				});
+				$('#pilih-sub-kategori').change(function() {
+					$.ajax({
+						type: "GET",
+			          	url: "api.php?command=get_daftar_barang&subkategori=" + $('#pilih-sub-kategori').val() + "&toko=" + $('#pilih-toko').val(),
+			           	success: function(data)
+			           	{
+			           		var res = JSON.parse(data);
+			           		if (res.status == 'success') {
+			           			$("#daftar-produk-shipped").empty();
+			           			var string = '';
+
+			           			string += '<table class="striped"><thead><tr><th>Kode Produk</th><th>Nama Produk</th><th>Harga</th><th>Deskripsi</th><th>Is Asuransi</th><th>Stok</th><th>Is Baru</th><th>Harga Grosir</th><th>Beli</th></tr></thead><tbody>';
+
+								$.each(res.response, function() {
+								    string += '<tr>';
+								    string += '<td>' + this.kode_produk +'</td>';
+								    string += '<td>' + this.nama + '</td>';
+								    string += '<td>' + this.harga +'</td>';
+								    string += '<td>' + this.deskripsi +'</td>';
+								    string += '<td>' + this.is_asuransi +'</td>';
+								    string += '<td>' + this.stok +'</td>';
+								    string += '<td>' + this.is_baru +'</td>';
+								    string += '<td>' + this.harga_grosir +'</td>';
+								    string += '</tr>';
+								});
+								string += '</tbody></table>';
+								$("#daftar-produk-shipped").html(string);		           	
+								$("#daftar-produk-shipped").material_select();		           	
+							}
+			           		else if (res.status == 'failed') {
+			           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+			           			Materialize.toast('Error terjadi!', 4000); 
+			           		}
+			           }
+					});
 				});
 				$.ajax({
 		           type: "GET",
