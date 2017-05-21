@@ -253,13 +253,6 @@
 								<form action="./config/config.php" method="post">
 									<select id="pilih-toko"  name="toko-shipped">
 										<option value="" disabled selected>Pilih Toko</option>
-										<?php
-											$result = lihat_toko();
-											while($row = pg_fetch_assoc($result)) {
-												echo 
-									    		"<option name='pilih-toko' value='".$row['nama']."'><a href='".$row['nama']."'>".$row['nama']."</a></option>";
-									    	}
-										?>
 									</select>
 									<input type="hidden" name="command" value="lihat-produk-toko">
 									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Lihat Produk</button>
@@ -754,6 +747,28 @@
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
 
+				$.ajax({
+					type: "GET",
+		          	url: "api.php?command=get_toko",
+		          	success: function(data) 
+		          	{
+		          		var res = JSON.parse(data);
+		          		if (res.status == 'success') {
+		           			$("#pilih-toko").empty();
+		           			var options = '';
+		           			options += '<option selected disabled>Pilih toko</option>';
+							$.each(res.response, function() {
+								options += '<option value="' + this.nama + '">' + this.nama + '</option>';
+							});
+							$("#pilih-toko").html(options);
+							$("#pilih-toko").material_select();
+		           		}
+		           		else if (res.status == 'failed') {
+			           		console.error('Error using API, response: ' + JSON.stringify(res.response));
+		           			Materialize.toast('Error terjadi!', 4000); 
+		           		}
+		          	}
+				});
 				$.ajax({
 		           type: "GET",
 		           url: "api.php?command=get_categories",

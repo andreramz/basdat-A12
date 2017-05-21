@@ -110,8 +110,13 @@
 			header("Location: ../index.php");
 		}
 		if ($_POST['command'] == 'beli-produk-pulsa'){
+			
 			if (isset($_SESSION['logged'])) {
-					$username = $_SESSION['email'];
+				echo "<script>console.log('enggak masuk ke email kosong')</script>";
+				$username = $_SESSION['email'];
+			}
+			else {
+				header("Location: ../login.php");
 			}
 			$kode = $_POST['kode-produk-pulsa'];
 			$nomor = $_POST['beli-nomor'];
@@ -121,6 +126,11 @@
 		$no_invoice = generateRandomString();
 		beliPulsa($username, $nomor, $kode, $nominal, $harga, $no_invoice);
 		header("Location: ../index.php");
+	}
+
+	if ($_POST['command'] == 'lihat-produk-toko') {
+		echo "<script>console.log('masuk lihat produk toko')</script>";
+
 	}
 
 	function connectDB() {

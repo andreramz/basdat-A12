@@ -20,6 +20,9 @@
 
 				$ret = getSubcategoriesByCategory($category);
 			}
+			elseif ($command == 'get_toko') {
+				$ret = getToko();
+			}
 			else {
 				throw new Exception('Command does not exist');
 			}
@@ -119,6 +122,26 @@
 		$connectDB = connectDB();
 		$sql = "SELECT * FROM tokokeren.KATEGORI_UTAMA";
 		
+		$res = pg_query($connectDB, $sql);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+		
+		$val = array();
+		while ($row = pg_fetch_assoc($res)) {
+			$val[] = ($row);
+		}
+
+		return $val;
+	}
+
+	function getToko()
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT T.nama FROM tokokeren.TOKO AS T";
+
 		$res = pg_query($connectDB, $sql);
 		$err = pg_last_error();
 

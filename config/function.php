@@ -53,4 +53,9 @@
 
 		return pg_query($connectDB, $sql);
 	}
+	// function lihat_kategori()
+	// {
+	// 	$connectDB = connectDB();
+	// 	$sql = "SELECT"
+	// }
 ?>
