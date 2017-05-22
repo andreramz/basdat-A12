@@ -466,7 +466,7 @@
 						<div class="col m2 s12 block"></div>
 						<div class="col m8 s12 block">
 							<div class="card-panel yellow lighten-3 black-text">
-								<form action="./config/config.php" method="post">
+								<form action="./config/config.php" method="post" id="create-toko-form" onsubmit="$('#create-toko-form option.active').attr('selected', true);" >
 									<div class="input-field">
 									    <input id="toko-nama" type="text"  pattern=".{1,100}" name="toko-nama" class="validate" required>
 									    <label for="toko-nama">Nama</label>
@@ -485,7 +485,7 @@
 									</div>
 									<div class="input-field">
 										<select multiple id="toko-jasa-kirim"  name="toko-jasa-kirim">
-											<option  disabled selected value="">Pilih...</option>
+											<option disabled selected value="">Pilih...</option>
 											<?php
 												$host = $GLOBALS['DB_HOST'];
 												$dbname = $GLOBALS['DB_NAME'];
@@ -1056,6 +1056,47 @@
 			      	});
 				    e.preventDefault(); // avoid to execute the actual submit of the form.
 				});
+
+				$('#create-toko-form').submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
+					var url = "config/config.php";
+					console.log($('#toko-jasa-kirim').val());
+					var dataa = $('#create-toko-form').serializeArray();
+					dataa[4].value = $('#toko-jasa-kirim').val();
+					dataakhir = dataa.slice(-1);
+					dataa = dataa.slice(0,5);
+					dataa.push(dataakhir[0]);
+					console.log(dataa);
+					$.ajax({
+						type: "POST",
+						url: url,
+						data: dataa,
+						success: function(data)
+						{
+							try {
+								if (data == 'berhasil') {
+									Materialize.toast('Pembuatan Toko berhasil!<br/>Redirect dalam 4 detik!', 4000);
+									setTimeout(function() {
+										location.reload();
+									}, 4000);
+					           	}
+					           	else {
+					           		Materialize.toast('Pembuatan Toko gagal!<br/>Nama Toko sudah diambil!', 4000); 
+					           	}
+							}
+							catch ($e) {
+								console.log('Error: ' + $e);
+			           			Materialize.toast('Pembuatan Toko gagal!<br/>Nama Toko sudah diambil!', 4000);
+							}
+						}
+					});
+					e.preventDefault();
+				});
+
 				$('#promo-periode-awal').change(function() {
 					$('#create-promo-form').valid();
 					var startDate = new Date($('#promo-periode-awal').val())

@@ -100,14 +100,19 @@
 			$slogan = $_POST['toko-slogan']; 
 			$lokasi = $_POST['toko-lokasi'];
 			$email = '';
-			addToko($nama, $deskripsi, $slogan, $lokasi, $username, $email);
+			$flag = addToko($nama, $deskripsi, $slogan, $lokasi, $username, $email);
+			if (!$flag) {
+				echo 'gagal';
+				exit;
+			}
 			if(!empty($_POST['toko-jasa-kirim'])) {
-			    foreach($_POST['toko-jasa-kirim'] as $check) {
+			    foreach(explode(',', $_POST['toko-jasa-kirim']) as $check) {
 			        $jasa_kirim = $check;
 			        addJasaKirimToko($nama, $jasa_kirim);
 			    }
 			}
-			header("Location: ../index.php");
+			echo 'berhasil';
+			exit;
 		}
 		if (isset($_POST['command']) && $_POST['command'] == 'beli-produk-pulsa'){
 			if (isset($_SESSION['logged'])) {
@@ -123,7 +128,7 @@
 			header("Location: ../index.php");
 		}
 
-		if ($_POST['command'] == 'lihat-produk-toko') {
+		if (isset($_POST['command']) && $_POST['command'] == 'lihat-produk-toko') {
 			echo "<script>console.log('masuk lihat produk toko')</script>";		
 		}
 	}
@@ -307,12 +312,16 @@
 		$sql2 = "INSERT INTO tokokeren.TOKO(nama, deskripsi, slogan, lokasi, email_penjual) VALUES ('$nama', '$deskripsi', '$slogan', '$lokasi', '$email')";
 
 		$query2 = pg_query($connectDB, $sql2);
+		if (!$query2) {
+			return false;
+		}
 
 		$sql3 = "UPDATE tokokeren.PELANGGAN SET is_penjual = 't' WHERE email = '$email'";
 
 		$query3 = pg_query($connectDB, $sql3);
 
 		$_SESSION['role'] = 'penjual';
+		return true;
 	}
 
 	function addJasaKirimToko($nama, $jasa_kirim){
