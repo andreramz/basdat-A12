@@ -200,9 +200,9 @@
 			<div id="see-keranjang" class="col s12">
 				<div class="container">
 					<div class="row">
-						<div class="col m12 s12 block">
 						<div id="notifikasi"></div>
-							<div id="keranjang-belanja" class="card-panel yellow lighten-3 black-text">
+						<div id="keranjang-belanja" class="col m12 s12 block">
+							<div class="card-panel yellow lighten-3 black-text">
 								<table iclass="striped">
 									<thead>
 										<tr>
@@ -228,10 +228,37 @@
 												<td>".$row['sub_total']."</td>
 											</tr>";
 										}
-
 										?>
 									</tbody>
 								</table>
+								<div class="row">
+							        <div class="col s12">
+							          	<form>
+							          		<select name="pilih-jasa-kirim">
+											<option  disabled selected value="">Pilih jasa kirim...</option>
+											<?php
+												$resultKeranjang = lihat_keranjang_belanja($_SESSION['email']);
+												$kode_produk = "";
+												while($row = pg_fetch_assoc($resultKeranjang)) {
+													$kode_produk = $row['kode_produk'];
+													echo "$kode_produk masuk sinii oyy";
+												}
+												$result = lihat_jasa_kirim($kode_produk);
+												while ($row = pg_fetch_assoc($result)){
+													echo '<option value="'.$row['jasa_kirim'].'">'.$row['jasa_kirim'].'</option>';
+												} 
+											?>
+											</select>
+							          		Alamat kirim:
+							          		<div class="input-field inline">
+								            <input id="alamat-kirim" name="alamat-kirim" type="text" class="validate">
+								            <label for="alamat" data-error="wrong" data-success="right">Alamat</label>
+								        	</div>
+								        	
+							          	</form>
+							          </div>
+							        </div>
+						      	</div>
 							</div>
 						</div>
 						<div class="col m2 s12 block"></div>

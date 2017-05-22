@@ -61,4 +61,14 @@
 
 		return pg_query($connectDB, $sql);
 	}
+
+
+	function lihat_jasa_kirim($kode_produk)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT TKJ.jasa_kirim FROM tokokeren.TOKO_JASA_KIRIM AS TKJ, tokokeren.TOKO AS T, tokokeren.SHIPPED_PRODUK AS SP WHERE SP.kode_produk = '$kode_produk' AND T.nama = TKJ.nama_toko AND SP.nama_toko = T.nama";
+
+		return pg_query($connectDB, $sql);
+	}
+
 ?>
