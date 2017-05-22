@@ -30,6 +30,10 @@
 								<li class="tab"><a class="black-text" href="#see-transaksi"><strong>Lihat Transaksi</strong></a></li>
 								<?php } ?>
 
+								<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
+								<li class="tab"><a class="black-text" href="#see-keranjang"><strong>Keranjang Belanja</strong></a></li>
+								<?php } ?>
+
 							    <?php if (isset($_SESSION['logged']) && $_SESSION['role'] == 'penjual') { ?>
 							    <li class="tab"><a class="black-text" href="#create-product-shipped"><strong>Tambah Produk</strong></a></li>
 
@@ -183,6 +187,51 @@
 									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
 							    </div>
 								</form>
+							</div>
+						</div>
+						<div class="col m2 s12 block"></div>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
+
+			<?php if (isset($_SESSION['logged']) && ($_SESSION['role'] == 'penjual' || $_SESSION['role'] == 'pembeli')) { ?>
+
+			<div id="see-keranjang" class="col s12">
+				<div class="container">
+					<div class="row">
+						<div class="col m12 s12 block">
+						<div id="notifikasi"></div>
+							<div id="keranjang-belanja" class="card-panel yellow lighten-3 black-text">
+								<table iclass="striped">
+									<thead>
+										<tr>
+											<th>Kode Produk</th>
+											<th>Nama Produk</th>
+											<th>Berat</th>
+											<th>Kuantitas</th>
+											<th>Harga</th>
+											<th>Sub Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$result = lihat_keranjang_belanja($_SESSION['email']);
+										while($row = pg_fetch_assoc($result)) {
+											echo 
+											"<tr>
+												<td>".$row['kode_produk']."</td>
+												<td>".$row['nama']."</td>
+												<td>".$row['berat']."</td>
+												<td>".$row['kuantitas']."</td>
+												<td>".$row['harga']."</td>
+												<td>".$row['sub_total']."</td>
+											</tr>";
+										}
+
+										?>
+									</tbody>
+								</table>
 							</div>
 						</div>
 						<div class="col m2 s12 block"></div>
@@ -450,7 +499,6 @@
 								</div>
 								<input type="hidden" name="command" value="addProdukPulsa">
 								<button type="submit" class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
-								<!--<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>-->
 								</form>
 							</div>
 						</div>
@@ -612,7 +660,16 @@
 			$(".button-collapse").sideNav();
 			$(".indicator").css("background-color: black;");
 			$("#category").hide();
-
+			<?php
+			$result = lihat_keranjang_belanja($_SESSION['email']);
+			if (pg_num_rows($result) == 0) {
+				echo '$("#keranjang-belanja").hide();';
+				echo '$("#notifikasi").html("Keranjang Belanja Kosong");';
+			}
+			else {
+				echo '$("#keranjang-belanja").show();';
+			}
+			?>
 			$('#modal-transaksi-pulsa-1').modal();
 			$('#modal-transaksi-pulsa-2').modal();
 			$('#modal-transaksi-shipped-1').modal();
@@ -835,10 +892,11 @@
 								    string += '<td>' + this.stok +'</td>';
 								    string += '<td>' + this.is_baru +'</td>';
 								    string += '<td>' + this.harga_grosir +'</td>';
+								    string += '<td><a class="waves-effect waves-light btn" href="#beli-produk-shipped-' + this.kode_produk + '">BELI</a></td>';
 								    string += '</tr>';
 								});
 								string += '</tbody></table>';
-								$("#daftar-produk-shipped").html(string);		           	
+								$("#daftar-produk-shipped").html(string);           	
 								$("#daftar-produk-shipped").material_select();		           	
 							}
 			           		else if (res.status == 'failed') {
@@ -1018,7 +1076,6 @@
 				        error.appendTo( element.parent() );
 				    }
 				});
-
 				$('.review-btn').click(function() {
 					$('#modal-review #ulasan-kode-produk').val($(this).attr('data-kode-produk'));
 					$('#modal-review').modal('open');

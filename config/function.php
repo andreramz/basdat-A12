@@ -53,4 +53,12 @@
 
 		return pg_query($connectDB, $sql);
 	}
+
+	function lihat_keranjang_belanja($email)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT DISTINCT K.*, P.nama FROM tokokeren.KERANJANG_BELANJA AS K, tokokeren.PRODUK AS P, tokokeren.TOKO WHERE K.pembeli = '$email' AND P.kode_produk = K.kode_produk";
+
+		return pg_query($connectDB, $sql);
+	}
 ?>
