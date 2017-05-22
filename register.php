@@ -77,71 +77,73 @@
 		<?php include("layout/footer.php"); ?>
 	</body>
 	<script>
-		$(".button-collapse").sideNav();
-		$(".indicator").css("background-color: black;");
-		$('select').material_select();
-		$('.datepicker').pickadate({
-			format: "mm/dd/yyyy",
-			selectMonths: true, // Creates a dropdown to control month
-			selectYears: 100 // Creates a dropdown of 15 years to control year
-		});
-		var terdaftar = false;
+		$(document).ready(function() {
+			$(".button-collapse").sideNav();
+			$(".indicator").css("background-color: black;");
+			$('select').material_select();
+			$('.datepicker').pickadate({
+				format: "mm/dd/yyyy",
+				selectMonths: true, // Creates a dropdown to control month
+				selectYears: 100 // Creates a dropdown of 15 years to control year
+			});
+			var terdaftar = false;
 
-		$("#password").on("input propertychange", function() {
-			var pass = $("#password").val();
-			if (pass.length < 6) {
-				$("#pass-alert").html("Password setidaknya memiliki 6 karakter");
-			}
-			else {
-				$("#pass-alert").html("");
-			}
-		});
-
-		$("#rep-password").on("input propertychange", function() {
-			var rep = $("#rep-password").val();
-			var pass = $("#password").val();
-			if (rep != pass) {
-				$("#rep-pass-alert").html("Password tidak sama");
-			}
-			else {
-				$("#rep-pass-alert").html("");
-			}
-		});
-
-		$("#phone").on("input propertychange", function() {
-			var phone = $("#phone").val();
-			var phoneRegex = /^08[1235789][1-9][0-9]{6,8}$/;
-			if (!phoneRegex.test(phone)) {
-				$("#phone-alert").html("Nomor telepon tidak sesuai format");
-			}
-			else {
-				$("#phone-alert").html("");
-			}
-		});
-
-		$("#password, #rep-password, #phone").on("input propertychange", function() {
-			var rep = $("#rep-password").val();
-			var pass = $("#password").val();
-			var phone = $("#phone").val();
-			var phoneRegex = /^08[1235789][1-9][0-9]{6,8}$/;
-			if (pass.length < 6 || rep != pass || !phoneRegex.test(phone) || terdaftar) {
-				$("#validator").val("salah");
-			}
-			else {
-				$("#validator").val("benar");
-			}
-		});
-
-		$("#email").on("input propertychange", function() {
-			$.post("config/config.php", {type: "checkEmail", typed: $("#email").val()}, function(response) {
-				if (response == "ada") {
-					$("#email-alert").html("Email sudah terdaftar");
-					terdaftar = true;
+			$("#password").on("input propertychange", function() {
+				var pass = $("#password").val();
+				if (pass.length < 6) {
+					$("#pass-alert").html("Password setidaknya memiliki 6 karakter");
 				}
-				else if (response == "kosong") {
-					$("#email-alert").html("");
-					terdaftar = false;
+				else {
+					$("#pass-alert").html("");
 				}
+			});
+
+			$("#rep-password").on("input propertychange", function() {
+				var rep = $("#rep-password").val();
+				var pass = $("#password").val();
+				if (rep != pass) {
+					$("#rep-pass-alert").html("Password tidak sama");
+				}
+				else {
+					$("#rep-pass-alert").html("");
+				}
+			});
+
+			$("#phone").on("input propertychange", function() {
+				var phone = $("#phone").val();
+				var phoneRegex = /^08[1235789][1-9][0-9]{6,8}$/;
+				if (!phoneRegex.test(phone)) {
+					$("#phone-alert").html("Nomor telepon tidak sesuai format");
+				}
+				else {
+					$("#phone-alert").html("");
+				}
+			});
+
+			$("#password, #rep-password, #phone").on("input propertychange", function() {
+				var rep = $("#rep-password").val();
+				var pass = $("#password").val();
+				var phone = $("#phone").val();
+				var phoneRegex = /^08[1235789][1-9][0-9]{6,8}$/;
+				if (pass.length < 6 || rep != pass || !phoneRegex.test(phone) || terdaftar) {
+					$("#validator").val("salah");
+				}
+				else {
+					$("#validator").val("benar");
+				}
+			});
+
+			$("#email").on("input propertychange", function() {
+				$.post("config/config.php", {type: "checkEmail", typed: $("#email").val()}, function(response) {
+					if (response == "ada") {
+						$("#email-alert").html("Email sudah terdaftar");
+						terdaftar = true;
+					}
+					else if (response == "kosong") {
+						$("#email-alert").html("");
+						terdaftar = false;
+					}
+				});
 			});
 		});
 	</script>
