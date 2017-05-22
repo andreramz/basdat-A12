@@ -233,7 +233,7 @@
 								</table>
 								<div class="row">
 							        <div class="col s12">
-							          	<form>
+							          	<form action="./config/config.php" method="post">
 							          		<select name="pilih-jasa-kirim">
 											<option  disabled selected value="">Pilih jasa kirim...</option>
 											<?php
@@ -241,7 +241,6 @@
 												$kode_produk = "";
 												while($row = pg_fetch_assoc($resultKeranjang)) {
 													$kode_produk = $row['kode_produk'];
-													echo "$kode_produk masuk sinii oyy";
 												}
 												$result = lihat_jasa_kirim($kode_produk);
 												while ($row = pg_fetch_assoc($result)){
@@ -254,7 +253,10 @@
 								            <input id="alamat-kirim" name="alamat-kirim" type="text" class="validate">
 								            <label for="alamat" data-error="wrong" data-success="right">Alamat</label>
 								        	</div>
-								        	
+								        	<input type="hidden" name="command" value="checkout">
+								        	<div class="modal-footer">
+											<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+									    	</div>
 							          	</form>
 							          </div>
 							        </div>

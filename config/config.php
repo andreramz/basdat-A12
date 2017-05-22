@@ -132,6 +132,21 @@
 		if (isset($_POST['command']) && $_POST['command'] == 'lihat-produk-toko') {
 			echo "<script>console.log('masuk lihat produk toko')</script>";		
 		}
+
+		if (isset($_POST['command']) && $_POST['command'] == 'checkout') {
+			$no_invoice = generateRandomString();
+
+			$result = lihat_keranjang_belanja($_SESSION['email']);
+			while ($row = pg_fetch_assoc($result)) {
+				addListItem($no_invoice, $row['kode_produk'], $row['berat'], $row['kuantitas'], $row['harga'], $row['sub_total']);
+			}
+
+			$alamat_kirim = $_POST['alamat-kirim'];
+			$nama_jasa_kirim = $_POST['pilih-jasa-kirim'];
+
+			checkout($no_invoice, $_SESSION['email'], 'Jones-Schultz', $alamat_kirim, $nama_jasa_kirim);
+			header("Location: ../index.php");
+		}
 	}
 
 	function connectDB() {
@@ -188,25 +203,6 @@
 		$_SESSION['status'] = 'gagal';
 		header("Location: ../login.php");
 
-		/*if ($email == $realemail && $password == $realpass) {
-			$_SESSION['logged'] = $email;
-			$_SESSION['role'] = 'admin';
-			header("Location: ../");
-		}
-		elseif ($email == $penjualemail && $password == $penjualpass) {
-			$_SESSION['logged'] = $email;
-			$_SESSION['role'] = 'penjual';
-			header("Location: ../");
-		}
-		elseif ($email == $pembeliemail && $password == $pembelipass) {
-			$_SESSION['logged'] = $email;
-			$_SESSION['role'] = 'pembeli';
-			header("Location: ../");
-		}
-		else {
-			$_SESSION['status'] = 'gagal';
-			header("Location: ../login.php");
-		}*/
 	}
 
 	function logout() {
@@ -502,4 +498,69 @@
 
 		}
 	}
+
+	function addListItem($no_invoice, $kode_produk, $berat, $kuantitas, $harga, $sub_total)
+	{
+		$connectDB = connectDB();
+
+		$sql = "INSERT INTO tokokeren.LIST_ITEM (no_invoice, kode_produk, berat, kuantitas, harga, sub_total) VALUES ('$no_invoice', '$kode_produk', '$berat', '$kuantitas', '$harga', '$sub_total')";
+
+		$query = pg_query($connectDB, $sql);
+
+	}
+
+	function checkout($no_invoice, $email_pembeli, $nama_toko, $alamat_kirim, $nama_jasa_kirim)
+	{
+		$sqltarif = "SELECT tarif FROM tokokeren.JASA_KIRIM WHERE nama = '$nama_jasa_kirim'";
+		$tarif = 0;
+		$querytarif = pg_query($connectDB, $sqltarif);
+
+		while ($row = pg_fetch_assoc($querytarif)) {
+			$tarif = $row['tarif'];
+		}
+
+		$sqltotalsub = "SELECT sub_total FROM tokokeren.KERANJANG_BELANJA";
+		$total_sub_total = 0;
+		$querytotalsub = pg_query($connectDB, $sqltotalsub);
+
+		while ($row = pg_fetch_assoc($querytotalsub)) {
+			$total_sub_total += $row['sub_total'];
+		}
+
+		$sqltotalberat = "SELECT berat FROM tokokeren.KERANJANG_BELANJA";
+		$totalberat = 0;
+		$querytotalberat = pg_query($connectDB, $sqltotalberat);
+
+		while ($row = pg_fetch_assoc($querytotalberat)) {
+			$totalberat += $row['berat'];
+		}
+
+		$biaya_kirim = $totalberat * $tarif;
+
+		$total_bayar = $total_sub_total + $biaya_kirim;
+
+		$no_resi = generateRandomString(16);
+
+		$sql2 = "INSERT INTO tokokeren.TRANSAKSI_SHIPPED (no_invoice, tanggal, waktu_bayar, status, total_bayar, email_pembeli, nama_toko, alamat_kirim, biaya_kirim, no_resi, nama_jasa_kirim) VALUES ('$no_invoice', CURRENT_DATE, Null, '1', '$total_bayar', '$email_pembeli', '$nama_toko', '$alamat_kirim', '$biaya_kirim', '$no_resi', '$nama_jasa_kirim')";
+
+		$query = pg_query($connectDB, $sql2);
+	}
+
+	function lihat_keranjang_belanja($email)
+	{
+		$connectDB = connectDB();
+		$sql = "SELECT DISTINCT K.*, P.nama FROM tokokeren.KERANJANG_BELANJA AS K, tokokeren.PRODUK AS P, tokokeren.TOKO WHERE K.pembeli = '$email' AND P.kode_produk = K.kode_produk";
+
+		return pg_query($connectDB, $sql);
+	}
+
+	function deleteKeranjang()
+	{
+		$connectDB = connectDB();
+
+		$sql = "DELETE FROM KERANJANG_BELANJA";
+
+		$query = pg_query($connectDB, $sql);
+	}
+
 ?>
