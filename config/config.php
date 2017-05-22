@@ -11,15 +11,15 @@
 	}
 	else {
 		if (isset($_POST['type']) && $_POST['type'] == 'checkEmail') {
-			$typed = $_POST['type'];
+			$typed = $_POST['typed'];
 			checkEmail($typed);
 		}
 		else if (isset($_POST['type']) && $_POST['type'] == 'category') {
-			$category = $_POST['type'];
+			$category = $_POST['typed'];
 			checkCategory($category);
 		}
 		else if (isset($_POST['type']) && $_POST['type'] == 'subcat') {
-			$sub = $_POST['type'];
+			$sub = $_POST['typed'];
 			checkSub($sub);
 		}
 
@@ -224,6 +224,18 @@
 		}
 
 		login($email, $password);
+	}
+
+	function checkEmail($email) {
+		$connectDB = connectDB();
+		$sql = "SELECT email FROM tokokeren.PENGGUNA WHERE email = '$email'";
+		$query = pg_query($connectDB, $sql);
+		if (pg_num_rows($query) > 0) {
+			echo "ada";
+		}
+		else {
+			echo "kosong";
+		}
 	}
 
 	function lihat_transaksi_pulsa($email) {
