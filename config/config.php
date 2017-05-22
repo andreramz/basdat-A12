@@ -36,13 +36,13 @@
 			category4($_POST['categorycode'], $_POST['categoryname'], $_POST['subcat1'], $_POST['subcatname1'], $_POST['subcat2'], $_POST['subcatname2'], $_POST['subcat3'], $_POST['subcatname3'], $_POST['subcat4'], $_POST['subcatname4']);
 		}
 
-		if ($_POST['command'] == 'login') {
+		if (isset($_POST['command']) && $_POST['command'] == 'login') {
 			$email = $_POST['email'];
 			$password = $_POST['password'];
 			login($email, $password);
 		}
-		else if ($_POST['command'] == 'register') {
-			if ($_POST['isValid'] == "benar") {
+		else if (isset($_POST['command']) && $_POST['command'] == 'register') {
+			if (isset($_POST['isValid']) && $_POST['isValid'] == "benar") {
 				$email = $_POST['email'];
 				$password = $_POST['password'];
 				$name = $_POST['name'];
@@ -57,7 +57,7 @@
 			}
 		}
 
-		if ($_POST['command'] == 'addProdukPulsa'){
+		if (isset($_POST['command']) && $_POST['command'] == 'addProdukPulsa'){
 			if (isset($_SESSION['logged'])) {
 				$username = $_SESSION['logged'];
 			}
@@ -69,7 +69,7 @@
 			addProdukPulsa($kode_produk, $nama_produk, $harga, $deskripsi, $nominal);
 		}
 		
-		if ($_POST['command'] == 'addProdukShipped') {
+		if (isset($_POST['command']) && $_POST['command'] == 'addProdukShipped') {
 			if (isset($_SESSION['logged'])) {
 				$username = $_SESSION['logged'];
 			}
@@ -91,7 +91,7 @@
 			addProdukShipped($kode_produk, $nama_produk, $harga, $deskripsi, $subKategori, $isAsuransi, $stok, $barangBaru, $minimalOrder, $minimalGrosir, $maksimalGrosir, $hargaGrosir, $uploadFoto, $username, $kategori, $email);
 		}
 		
-		if ($_POST['command'] == 'addToko'){
+		if (isset($_POST['command']) && $_POST['command'] == 'addToko'){
 			if (isset($_SESSION['logged'])) {
 				$username = $_SESSION['logged'];
 			}
@@ -109,28 +109,23 @@
 			}
 			header("Location: ../index.php");
 		}
-		if ($_POST['command'] == 'beli-produk-pulsa'){
-			
+		if (isset($_POST['command']) && $_POST['command'] == 'beli-produk-pulsa'){
 			if (isset($_SESSION['logged'])) {
-				echo "<script>console.log('enggak masuk ke email kosong')</script>";
-				$username = $_SESSION['email'];
+					$username = $_SESSION['email'];
 			}
-			else {
-				header("Location: ../login.php");
-			}
+
 			$kode = $_POST['kode-produk-pulsa'];
 			$nomor = $_POST['beli-nomor'];
 			$harga = $_POST['harga-produk-pulsa'];
 			$nominal = $_POST['nominal-produk-pulsa'];
+			$no_invoice = generateRandomString();
+			beliPulsa($username, $nomor, $kode, $nominal, $harga, $no_invoice);
+			header("Location: ../index.php");
 		}
-		$no_invoice = generateRandomString();
-		beliPulsa($username, $nomor, $kode, $nominal, $harga, $no_invoice);
-		header("Location: ../index.php");
-	}
 
-	if ($_POST['command'] == 'lihat-produk-toko') {
-		echo "<script>console.log('masuk lihat produk toko')</script>";
-		
+		if ($_POST['command'] == 'lihat-produk-toko') {
+			echo "<script>console.log('masuk lihat produk toko')</script>";		
+		}
 	}
 
 	function connectDB() {
