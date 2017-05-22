@@ -1,4 +1,5 @@
 <?php
+	error_reporting(0);
 	require_once(__DIR__.'/config.php');
 	try {
 		session_start();
@@ -52,7 +53,21 @@
 			}
 		}
 		elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-			if ($command == 'create_jasa_kirim') {
+			if ($command == 'add_to_cart') {
+				if (!isset($_SESSION['role']) || $_SESSION['role'] == 'admin')
+					throw new Exception('Unauthorized access. Login or stop being admin!');
+
+				$emailPembeli = $_SESSION['email'];
+				$kodeProduk = $_POST['beli-kode-produk'];
+				$kuantitas = $_POST['beli-kuantitas'];
+				$berat = $_POST['beli-berat'];
+
+				if (!isset($emailPembeli) || !isset($kodeProduk) || !isset($kuantitas) || !isset($berat))
+					throw new Exception('create_jasa_kirim arguments are missing');
+
+				$ret = addToCart($emailPembeli, $kodeProduk, $kuantitas, $berat);
+			}
+			elseif ($command == 'create_jasa_kirim') {
 				if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 					throw new Exception('Unauthorized access. Administrator only');
 
@@ -131,6 +146,51 @@
 	function createJasaKirim($nama, $lamaKirim, $tarif) {
 		$connectDB = connectDB();
 		$sql = "INSERT INTO tokokeren.JASA_KIRIM (nama, lama_kirim, tarif) VALUES ('$nama', '$lamaKirim', $tarif)";
+
+		$res = pg_query($connectDB, $sql);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+
+		return true;
+	}
+
+	function addToCart($email, $kodeProduk, $kuantitas, $berat) {
+		$connectDB = connectDB();
+		
+		$q_harga = "SELECT harga FROM tokokeren.produk WHERE kode_produk='$kodeProduk';";
+		$res = pg_query($connectDB, $q_harga);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+		$harga = pg_fetch_assoc($res)['harga'];
+
+		$q_grosir = "select min_order, min_grosir, max_grosir, harga_grosir from tokokeren.shipped_produk where kode_produk = '$kodeProduk';";
+		$res = pg_query($connectDB, $q_grosir);
+		$err = pg_last_error();
+
+		if ($err != "") {
+			throw new Exception($err);
+		}
+		$row = pg_fetch_assoc($res);
+		$hargaGrosir = $row['harga_grosir'];
+		$minGrosir = $row['min_grosir'];
+		$maxGrosir = $row['max_grosir'];
+		$minOrder = $row['min_order'];
+
+		if ($kuantitas < $minOrder)
+			throw new Exception('Kuantitas minimal pembelian sejumlah ' . $minOrder);
+
+		if ($kuantitas >= $minGrosir && $kuantitas <= $maxGrosir)
+			$harga = $hargaGrosir;
+
+		$subtotal = $harga * $kuantitas;
+
+		$sql = "INSERT INTO tokokeren.keranjang_belanja (pembeli, kode_produk, berat, kuantitas, harga, sub_total) VALUES ('$email', '$kodeProduk', $berat, $kuantitas, $harga, $subtotal)";
 
 		$res = pg_query($connectDB, $sql);
 		$err = pg_last_error();

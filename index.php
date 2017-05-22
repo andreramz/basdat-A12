@@ -249,6 +249,27 @@
 									</tbody>
 								</table>
 							</div>
+							<div id="modal-beli" class="modal">
+								<form id="beli-form">
+							  	<div class="modal-content">
+									<div class="input-field">
+										<input id="beli-kode-produk" type="text" name="beli-kode-produk" class="validate" value="S0000001" readonly required>
+										<label for="beli-kode-produk">Kode Produk</label>
+									</div>
+									<div class="input-field">
+										<input id="beli-kuantitas" type="number" name="beli-kuantitas" class="validate" required>
+										<label for="beli-kuantitas">Kuantitas</label>
+									</div>
+									<div class="input-field">
+										<input id="beli-berat" type="number" name="beli-berat" class="validate">
+										<label for="beli-berat">Berat</label>
+									</div>
+								</div>
+							    <div class="modal-footer">
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+							    </div>
+								</form>
+							</div>
 							<div id='lihat-shipped'>
 									<select id="pilih-toko"  name="toko-shipped">
 										<option value="" disabled selected>Pilih Toko...</option>
@@ -609,50 +630,11 @@
 		</main>
 		<?php include("layout/footer.php"); ?>
 		<script>
-			$(".button-collapse").sideNav();
-			$(".indicator").css("background-color: black;");
-			$("#category").hide();
-
-			$('#modal-transaksi-pulsa-1').modal();
-			$('#modal-transaksi-pulsa-2').modal();
-			$('#modal-transaksi-shipped-1').modal();
-			$('#modal-transaksi-shipped-2').modal();
-
-			$("#transaksi-pulsa").hide();
-			$("#transaksi-shipped").hide();
-			$("#daftar-produk-1").hide();
-			var forms = 0;
-			$("#category-button").click(function() {
-				$("#category").show();
-				$("#category-button").hide();
-			});
-			$("#transaksi-pulsa-button").click(function() {
-				$("#transaksi-pulsa").show();
-				$("#transaksi-pulsa-button").hide();
-				$("#transaksi-shipped-button").hide();
-			});
-			$("#transaksi-shipped-button").click(function() {
-				$("#transaksi-shipped").show();
-				$("#transaksi-pulsa-button").hide();
-				$("#transaksi-shipped-button").hide();
-			});
-			$("#daftar-produk-1-button").click(function() {
-				$("#daftar-produk-1").show();
-			});
-			$("#subcategory-button").click(function() {
-				forms++;
-				if (forms < 4) {
-					var subs = "#sub-category-"+forms;
-					$(subs).show();
-				}
-				if (forms >= 4) {
-					$("#subcategory-button").hide();
-				}
-			});
-			$('.datepicker').pickadate({
-				selectMonths: true, // Creates a dropdown to control month
-				selectYears: 15 // Creates a dropdown of 15 years to control year
-			});
+			function beliButton(obj) {
+				console.log(obj.attr('data-kode-produk'));
+				$('#modal-beli #beli-kode-produk').val(obj.attr('data-kode-produk'));
+				$('#modal-beli').modal('open');
+			}
 
 			$(document).ready(function() {
 				$(".button-collapse").sideNav();
@@ -835,6 +817,7 @@
 								    string += '<td>' + this.stok +'</td>';
 								    string += '<td>' + this.is_baru +'</td>';
 								    string += '<td>' + this.harga_grosir +'</td>';
+								    string += '<td>' + "<a class='waves-effect waves-light btn beli-btn' data-kode-produk='" + this.kode_produk + "' onclick='beliButton($(this));'>BELI</a></td>";
 								    string += '</tr>';
 								});
 								string += '</tbody></table>';
@@ -938,7 +921,7 @@
 				           		}
 				           		else if (res.status == 'failed') {
 				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-				           			Materialize.toast('Pembuatan Jasa Kirim gagal!<br/>Nama Jasa Kirim sudah ada!', 4000); 
+				           			Materialize.toast('Pembuatan Jasa Kirim gagal!<br/>' + res.response, 4000); 
 				           		}
 			           		}
 			           		catch ($e) {
@@ -992,7 +975,7 @@
 				           		}
 				           		else if (res.status == 'failed') {
 				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-				           			Materialize.toast('Pembuatan Promo gagal!<br/>Kode promo maksimal 20 karakter!', 4000); 
+				           			Materialize.toast('Pembuatan Promo gagal!<br/>' + res.response, 4000); 
 				           		}
 				           	}
 			           		catch ($e) {
@@ -1019,10 +1002,29 @@
 				    }
 				});
 
+				$('#beli-form').validate({
+					rules: {
+				      "beli-kode-produk": {
+				        required: true
+				      },
+				      "beli-kuantitas": {
+				        required: true
+				      },
+				      "beli-berat": {
+				      	required: true
+				      },
+				    },
+				    messages: {},
+				    errorPlacement: function(error, element) {
+				        error.appendTo( element.parent() );
+				    }
+				});
+
 				$('.review-btn').click(function() {
 					$('#modal-review #ulasan-kode-produk').val($(this).attr('data-kode-produk'));
 					$('#modal-review').modal('open');
 				});
+
 
 				$("#review-form").submit(function(e) {
 					if (!$(this).valid()) {
@@ -1045,12 +1047,45 @@
 				           		}
 				           		else if (res.status == 'failed') {
 				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
-				           			Materialize.toast('Pembuatan Review gagal!<br/>Anda sudah pernah mereview produk ini!', 4000); 
+				           			Materialize.toast('Pembuatan Review gagal!<br/>' + res.response, 4000); 
 				           		}
 				           	}
 			           		catch ($e) {
 			           			console.log('Error: ' + $e);
 			           			Materialize.toast('Pembuatan Review gagal!<br/>Anda sudah pernah mereview produk ini!', 4000);
+			           		}
+			           }
+			      	});
+				    e.preventDefault(); // avoid to execute the actual submit of the form.
+				});
+
+				$("#beli-form").submit(function(e) {
+					if (!$(this).valid()) {
+						e.preventDefault();
+						return false;
+					}
+
+				    var url = "api.php?command=add_to_cart"; // the script where you handle the form input
+				    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#beli-form").serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			           		try {
+				           		var res = JSON.parse(data);
+				           		if (res.status == 'success') {
+				           			Materialize.toast('Produk masuk ke keranjang pembelian!', 4000); 
+									$('#modal-beli').modal('close');
+				           		}
+				           		else if (res.status == 'failed') {
+				           			console.error('Error using API, response: ' + JSON.stringify(res.response));
+				           			Materialize.toast('Pembelian produk gagal!<br/>' + res.response, 4000); 
+				           		}
+				           	}
+			           		catch ($e) {
+			           			console.log('Error: ' + $e);
+			           			Materialize.toast('Pembelian produk gagal!<br/>' + res.response, 4000);
 			           		}
 			           }
 			      	});

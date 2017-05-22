@@ -1,4 +1,5 @@
 <?php
+	error_reporting(0);
 	require( __DIR__.'/../config.php');
 	if (!isset($_SESSION)) {
 		session_start();
