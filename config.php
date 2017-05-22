@@ -1,6 +1,6 @@
 <?php
 	$DB_HOST = "localhost";
-	$DB_NAME = "postgres";
-	$DB_USERNAME = "postgres";
-	$DB_PASS = "marjuan2005";
+	$DB_NAME = "valianfil";
+	$DB_USERNAME = "valianfil";
+	$DB_PASS = "1234abcd";
 ?>

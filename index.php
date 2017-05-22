@@ -548,7 +548,7 @@
 									<label for="nominal-product-pulsa">Nominal</label>
 								</div>
 								<input type="hidden" name="command" value="addProdukPulsa">
-								<button type="submit" class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+								<button type="submit" class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button-pulsa" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
@@ -603,7 +603,7 @@
 									    <label for="toko-jasa-kirim">Jasa Kirim</label>
 									</div>
 									<input type="hidden" name="command" value="addToko">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" type="submit" id="submit-button" style="margin-top: 10px;">Submit</button>
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" type="submit" id="submit-button-toko" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
@@ -695,7 +695,7 @@
 								        <input type="file" name="upload-foto" required>
 									</div>
 									<input type="hidden" name="command" value="addProdukShipped">
-									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button" style="margin-top: 10px;">Submit</button>
+									<button class="yellow darken-2 black-text waves-effect waves-light btn" id="submit-button-shipped" style="margin-top: 10px;">Submit</button>
 								</form>
 							</div>
 						</div>
@@ -1431,7 +1431,185 @@
 						});
 					}
 				});
+				$('#submit-button-shipped').click(function(e) {
+					e.preventDefault();
+					var kode_produk = $('#kode-product-shipped').val();
+					var nama_produk = $('#nama-product-shipped').val();
+					var harga = parseInt($('#harga-product-shipped').val(),10); 
+					var subkategori = $('#subkategori-product-shipped').val();
+					var barang_asuransi = '';
+					if(document.getElementById('barang-asuransi-ya').checked){
+						barang_asuransi = $('#barang-asuransi-ya').val();	
+					}
+					if(document.getElementById('barang-asuransi-tidak').checked){
+						barang_asuransi = $('#barang-asuransi-tidak').val();
+					}
+					var v3 = parseInt($('#stok-product-shipped').val(),10);
+					var barang_baru = '';
+					if(document.getElementById('barang-baru-ya').checked){
+						barang_baru = $('#barang-baru-ya').val();	
+					}
+					if(document.getElementById('barang-baru-tidak').checked){
+						barang_baru = $('#barang-baru-tidak').val();
+					}
+					var v1 = parseInt($('#maksimal-grosir-product-shipped').val(),10); 
+					var v2 = parseInt($('#minimal-grosir-product-shipped').val(),10);
+					var v4 = parseInt($('#minimal-order-product-shipped').val(),10);
+					var v5 = parseInt($('#harga-grosir-product-shipped').val(),10);
+					var upload_foto = $('#upload_foto').val(); 
+					var error = 0;
+						if(kode_produk.length == 0){
+							 $('#kode-product-shipped').addClass('error');
+							 Materialize.toast("Kode produk tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(nama_produk.length == 0){
+							 $('#nama-product-shipped').addClass('error');
+							 Materialize.toast("Karakter pada nama produk tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#harga-product-shipped').val().length == 0){
+							 $('#harga-product-shipped').addClass('error');
+							 Materialize.toast("Karakter pada harga produk tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(subkategori.length == 0){
+							 $('#subkategori-product-shipped').addClass('error');
+							 Materialize.toast("Sub kategori tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(barang_asuransi.length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("Barang asuransi tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#stok-product-shipped').val().length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("Stok tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(barang_baru.length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("Kondisi barang tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#minimal-order-product-shipped').val().length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("minimal order tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#minimal-grosir-product-shipped').val().length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("minimal grosis tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#maksimal-grosir-product-shipped').val().length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("maksimal grosir tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#harga-grosir-product-shipped').val().length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("Harga grosir tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(upload_foto.length == 0){
+							 $('#product-shipped').addClass('error');
+							 Materialize.toast("Foto harus di upload", 3000);
+						    error++;
+						}
+						if( v1 < v2) {
+						    $('#maksimal-grosir-product-shipped').addClass('error');
+						    Materialize.toast("Jumlah maksimal grosir harus lebih besar di banding jumlah minimal grosir", 3000);
+						    error++;
+						} 
+						if (v3 < 1) {
+							$('#stok-product-shipped').addClass('error');
+							Materialize.toast("Jumlah stok harus lebih besar dari 0", 3000);
+					    	error++;
+						}
+					    if(v4 < 1){
+					    	$('#minimal-order-product-shipped').addClass('error');
+					    	Materialize.toast("Jumlah minimal order harus lebih besar dari 0", 3000);
+					    	error++;
+						}
+						if(v5 < 1){
+					    	$('#harga-grosir-product-shipped').addClass('error');
+					    	Materialize.toast("harga grosis harus lebih besar dari 0", 3000);
+					    	error++;
+						}
+						if(v3 > 0 && v4 > 0 && v5 > 0 && v1 >= v2){
+							$("#form-product-shipped").submit();
+							return;
+						}
+				});
+				$('#submit-button-pulsa').click(function(e) {
+					e.preventDefault();
+					var kode_produk = $('#kode-product-pulsa').val();
+					var nama_produk = $('#nama-product-pulsa').val();
+					var harga = parseInt($('#harga-product-pulsa').val(),10); 
+					var nominal = parseInt($('#nominal-product-pulsa').val(),10);
+					var error = 0;
+						if(kode_produk.length == 0){
+							 $('#kode-product-pulsa').addClass('error');
+							 Materialize.toast("Kode produk tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(nama_produk.length == 0){
+							 $('#nama-product-pulsa').addClass('error');
+							 Materialize.toast("Karakter pada nama produk tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#harga-product-pulsa').val().length == 0){
+							 $('#harga-product-pulsa').addClass('error');
+							 Materialize.toast("Karakter pada harga produk tidak boleh kosong", 3000);
+						    error++;
+						}
+						if($('#nominal-product-pulsa').val().length == 0){
+							 $('#nominal-product-shipped').addClass('error');
+							 Materialize.toast("minimal order tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(nominal < 1){
+							$('#nominal-product-shipped').addClass('error');
+							Materialize.toast("angka nominal harus lebih besar dari 0", 3000);
+						    error++;
+						}
+						if(harga < 1){
+							$('#harga-product-shipped').addClass('error');
+							Materialize.toast("angka harga harus lebih besar dari 0", 3000);
+						    error++;
+						}
+						if(harga > 0 && nominal > 0){
+							$("#form-product-shipped").submit();
+							return;
+						}
+				});
+				$('#submit-button-toko').click(function(e) {
+					e.preventDefault();
+					var nama = $('#toko-nama').val();
+					var lokasi = $('#toko-lokasi').val();
+						if(nama.length == 0){
+							 $('#toko-nama').addClass('error');
+							 Materialize.toast("nama toko tidak boleh kosong", 3000);
+						    error++;
+						}
+						if(lokasi.length == 0){
+							 $('#toko-lokasi').addClass('error');
+							 Materialize.toast("lokasi toko tidak boleh kosong", 3000);
+						    error++;
+						}
+						
+						if(nama.length > 0 && lokasi.length > 0){
+							$("#form-product-shipped").submit();
+							return;
+						}
+				});
 				$('#create-product-shipped').ready(function(){
+					$("select").material_select();
+					$("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
+				});
+				$('#create-product-pulsa').ready(function(){
 					$("select").material_select();
 					$("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
 				});
